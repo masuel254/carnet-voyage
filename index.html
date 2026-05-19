@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SG & Japon 2026">
+<meta name="theme-color" content="#1A1A1A">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%231A1A1A'/><text x='90' y='125' font-size='90' text-anchor='middle'>✈</text></svg>">
+<title>Singapour & Japon 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F2E6C2;
+    --gold-pale: #FAF6EE;
+    --dark: #1A1A1A;
+    --dark2: #2C2C2C;
+    --grey: #666;
+    --grey-light: #AAA;
+    --grey-pale: #F4F4F2;
+    --cream: #FEFDF8;
+    --teal: #2A6B7C;
+    --teal-pale: #EAF4F7;
+    --coral: #C8573F;
+    --coral-pale: #FDF0EE;
+    --green: #2E6B3E;
+    --green-pale: #EEF5F0;
+    --purple: #5B3A7E;
+    --purple-pale: #F2EEF8;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bot: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%; background: var(--dark); color: var(--dark);
+    font-family: 'DM Sans', sans-serif; overflow: hidden;
+  }
+
+  /* ── APP SHELL ── */
+  #app { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* ── COVER ── */
+  #cover {
+    position: absolute; inset: 0; z-index: 100;
+    background: var(--dark);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0; padding: 32px 24px;
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  #cover.hidden { opacity: 0; transform: translateY(-20px); pointer-events: none; }
+
+  .cover-tag {
+    font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 4px; color: var(--gold); text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .cover-title {
+    font-family: 'Cormorant Garamond', serif; font-size: clamp(52px, 16vw, 72px);
+    font-weight: 700; color: #fff; line-height: .9; text-align: center;
+    text-shadow: 0 2px 40px rgba(201,168,76,.15);
+  }
+  .cover-amp {
+    font-family: 'Cormorant Garamond', serif; font-size: 22px;
+    color: var(--gold); margin: 10px 0;
+  }
+  .cover-line {
+    width: 80px; height: 1.5px; background: var(--gold); margin: 18px auto;
+  }
+  .cover-date {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--gold-light); letter-spacing: 2px;
+  }
+  .cover-stats {
+    display: flex; gap: 20px; margin-top: 28px;
+  }
+  .cover-stat {
+    background: #272727; border-radius: 10px; padding: 14px 18px;
+    text-align: center; min-width: 60px;
+  }
+  .cover-stat-n {
+    font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700;
+    color: var(--gold); line-height: 1;
+  }
+  .cover-stat-l {
+    font-size: 9px; font-weight: 500; color: var(--grey-light);
+    text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
+  }
+  .cover-route {
+    display: flex; align-items: center; gap: 6px; margin-top: 24px; flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cover-route span {
+    font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+    color: var(--grey-light); text-transform: uppercase;
+  }
+  .cover-route .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+  .cover-route .first, .cover-route .last { color: var(--gold); }
+  .cover-btn {
+    margin-top: 36px; background: var(--gold); color: var(--dark);
+    border: none; border-radius: 50px; padding: 16px 40px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+    letter-spacing: 1px; cursor: pointer;
+    box-shadow: 0 8px 30px rgba(201,168,76,.35);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .cover-btn:active { transform: scale(.96); box-shadow: 0 4px 15px rgba(201,168,76,.2); }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    background: var(--dark); padding: calc(var(--safe-top) + 12px) 16px 12px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1.5px solid var(--gold);
+    flex-shrink: 0;
+  }
+  #topbar.hidden { display: none; }
+  .tb-back {
+    background: #2a2a2a; border: none; border-radius: 8px;
+    padding: 8px 12px; color: var(--gold);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    display: none; white-space: nowrap;
+  }
+  .tb-back.show { display: block; }
+  .tb-title {
+    flex: 1; font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; font-weight: 600; color: #fff;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .tb-sub { font-size: 10px; color: var(--gold); letter-spacing: 1px; font-weight: 500; }
+
+  /* ── BOTTOM NAV ── */
+  #bottomnav {
+    background: var(--dark); border-top: 1px solid #333;
+    display: flex; padding-bottom: var(--safe-bot);
+    flex-shrink: 0;
+  }
+  #bottomnav.hidden { display: none; }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 10px 4px; gap: 4px; cursor: pointer; border: none; background: none;
+    transition: all .2s;
+  }
+  .nav-item.active .nav-icon { color: var(--gold); }
+  .nav-item.active .nav-label { color: var(--gold); }
+  .nav-icon { font-size: 18px; color: #555; transition: color .2s; }
+  .nav-label { font-size: 9px; font-weight: 600; letter-spacing: .5px; color: #555;
+    text-transform: uppercase; transition: color .2s; }
+
+  /* ── MAIN CONTENT ── */
+  #main { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; min-height: 100%; }
+  .screen.active { display: block; }
+
+  /* ── ITINERARY LIST ── */
+  .days-list { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+
+  .chapter-header {
+    background: var(--dark); border-radius: 14px; overflow: hidden;
+    margin-bottom: 4px;
+  }
+  .chapter-header-inner {
+    padding: 18px 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .chapter-num {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: var(--gold); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .chapter-num-n {
+    font-family: 'Cormorant Garamond', serif; font-size: 20px;
+    font-weight: 700; color: var(--dark); line-height: 1;
+  }
+  .chapter-city {
+    font-family: 'Cormorant Garamond', serif; font-size: 22px;
+    font-weight: 700; color: #fff;
+  }
+  .chapter-dates { font-size: 11px; color: var(--gold); font-weight: 500; margin-top: 2px; }
+  .chapter-desc { font-size: 11px; color: #888; line-height: 1.5; margin-top: 3px; }
+
+  .day-card {
+    background: var(--cream); border-radius: 14px; overflow: hidden;
+    cursor: pointer; transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .day-card:active { transform: scale(.98); }
+  .day-card-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; border-bottom: 1px solid rgba(201,168,76,.15);
+  }
+  .day-num-badge {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--gold);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .day-num-j { font-size: 7px; font-weight: 700; color: var(--dark); letter-spacing: 1px; }
+  .day-num-n {
+    font-family: 'Cormorant Garamond', serif; font-size: 18px;
+    font-weight: 700; color: var(--dark); line-height: 1;
+  }
+  .day-card-info { flex: 1; min-width: 0; }
+  .day-card-date { font-size: 13px; font-weight: 600; color: var(--dark); }
+  .day-card-loc { font-size: 11px; color: var(--teal); font-weight: 500; margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .day-card-hotel {
+    font-size: 10px; background: var(--gold); color: var(--dark);
+    padding: 4px 9px; border-radius: 20px; font-weight: 600; white-space: nowrap;
+    align-self: flex-start; flex-shrink: 0;
+  }
+  .day-card-preview {
+    padding: 10px 16px 14px;
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .preview-pill {
+    font-size: 10px; padding: 4px 10px; border-radius: 20px;
+    font-weight: 500;
+  }
+  .pill-transport { background: var(--teal-pale); color: var(--teal); }
+  .pill-activity  { background: var(--gold-pale); color: #8a6a1a; }
+  .pill-meal      { background: var(--coral-pale); color: var(--coral); }
+  .pill-show      { background: var(--purple-pale); color: var(--purple); }
+  .pill-hotel     { background: var(--green-pale); color: var(--green); }
+  .day-card-chevron { color: var(--grey-light); font-size: 16px; }
+  .day-preview-more { font-size: 10px; color: var(--grey-light); padding: 4px 10px; }
+
+  /* ── DAY DETAIL ── */
+  #day-detail { background: var(--cream); }
+  .detail-header {
+    background: var(--dark); padding: 20px 16px 16px;
+  }
+  .detail-day-row { display: flex; align-items: center; gap: 14px; }
+  .detail-badge {
+    width: 52px; height: 52px; border-radius: 50%; background: var(--gold);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .detail-badge-j { font-size: 8px; font-weight: 700; color: var(--dark); letter-spacing: 1px; }
+  .detail-badge-n { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--dark); }
+  .detail-date-block { flex: 1; }
+  .detail-date { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: #fff; }
+  .detail-loc { font-size: 11px; color: var(--gold); font-weight: 600; letter-spacing: 1px; margin-top: 3px; }
+  .detail-hotel-pill {
+    background: var(--gold); color: var(--dark); padding: 6px 12px;
+    border-radius: 20px; font-size: 10px; font-weight: 700; text-align: center;
+    max-width: 130px; line-height: 1.3;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline { padding: 16px; display: flex; flex-direction: column; gap: 0; }
+  .tl-item { display: flex; gap: 12px; }
+  .tl-left { display: flex; flex-direction: column; align-items: center; width: 36px; flex-shrink: 0; }
+  .tl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 14px; }
+  .tl-line { width: 2px; flex: 1; min-height: 12px; }
+  .tl-card {
+    flex: 1; border-radius: 12px; padding: 13px 14px 12px;
+    margin-bottom: 10px; position: relative;
+  }
+  .tl-time { font-size: 10px; font-weight: 700; letter-spacing: .5px; margin-bottom: 4px; }
+  .tl-title { font-size: 14px; font-weight: 600; color: var(--dark); line-height: 1.3; margin-bottom: 5px; }
+  .tl-body { font-size: 12px; color: var(--grey); line-height: 1.5; }
+  .tl-cost {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 10px; font-weight: 700; padding: 3px 9px;
+    border-radius: 20px; max-width: 100px; text-align: center;
+    white-space: nowrap;
+  }
+
+  /* Type colors */
+  .type-transport .tl-card { background: var(--teal-pale); }
+  .type-transport .tl-dot  { background: var(--teal); }
+  .type-transport .tl-line { background: rgba(42,107,124,.2); }
+  .type-transport .tl-time { color: var(--teal); }
+  .type-transport .tl-cost { background: var(--teal); color: #fff; }
+
+  .type-activity .tl-card { background: var(--gold-pale); }
+  .type-activity .tl-dot  { background: var(--gold); }
+  .type-activity .tl-line { background: rgba(201,168,76,.2); }
+  .type-activity .tl-time { color: #8a6a1a; }
+  .type-activity .tl-cost { background: var(--gold); color: var(--dark); }
+
+  .type-meal .tl-card { background: var(--coral-pale); }
+  .type-meal .tl-dot  { background: var(--coral); }
+  .type-meal .tl-line { background: rgba(200,87,63,.2); }
+  .type-meal .tl-time { color: var(--coral); }
+  .type-meal .tl-cost { background: var(--coral); color: #fff; }
+
+  .type-hotel .tl-card { background: var(--green-pale); }
+  .type-hotel .tl-dot  { background: var(--green); }
+  .type-hotel .tl-line { background: rgba(46,107,62,.2); }
+  .type-hotel .tl-time { color: var(--green); }
+  .type-hotel .tl-cost { background: var(--green); color: #fff; }
+
+  .type-show .tl-card { background: var(--purple-pale); }
+  .type-show .tl-dot  { background: var(--purple); }
+  .type-show .tl-line { background: rgba(91,58,126,.2); }
+  .type-show .tl-time { color: var(--purple); }
+  .type-show .tl-cost { background: var(--purple); color: #fff; }
+
+  .type-normal .tl-card { background: var(--grey-pale); }
+  .type-normal .tl-dot  { background: var(--grey-light); }
+  .type-normal .tl-line { background: rgba(170,170,170,.2); }
+  .type-normal .tl-time { color: var(--grey); }
+  .type-normal .tl-cost { background: var(--grey-light); color: #fff; }
+
+  .tip-box {
+    background: var(--gold-pale); border-left: 3px solid var(--gold);
+    border-radius: 10px; padding: 12px 14px; margin: 4px 0 12px;
+  }
+  .tip-label { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 1px; margin-bottom: 4px; }
+  .tip-text  { font-size: 12px; color: var(--dark2); line-height: 1.5; }
+
+  .note-bar {
+    background: var(--dark); border-radius: 10px; padding: 12px 14px; margin: 0 0 20px;
+  }
+  .note-label { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 1px; margin-bottom: 3px; }
+  .note-text  { font-size: 12px; color: #ccc; line-height: 1.4; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    background: #2a2a2a; height: 3px; margin: 0;
+  }
+  .progress-bar-fill {
+    height: 100%; background: var(--gold);
+    transition: width .4s ease;
+  }
+
+  /* ── INFO SCREEN ── */
+  .info-section { padding: 16px; }
+  .info-card {
+    background: var(--cream); border-radius: 14px; overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .info-card-head {
+    background: var(--dark); padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .info-card-icon {
+    width: 32px; height: 32px; border-radius: 8px; background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .info-card-title { font-size: 14px; font-weight: 700; color: #fff; }
+  .info-card-body { padding: 12px 16px; }
+  .info-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 9px 0; border-bottom: 1px solid rgba(201,168,76,.12);
+    gap: 10px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row-label { font-size: 12px; font-weight: 600; color: var(--dark); flex-shrink: 0; max-width: 48%; }
+  .info-row-val { font-size: 12px; color: var(--grey); text-align: right; line-height: 1.4; }
+  .resa-card {
+    background: var(--cream); border-radius: 14px; overflow: hidden;
+    margin-bottom: 10px; border: 1px solid rgba(201,168,76,.2);
+  }
+  .resa-header { padding: 12px 14px 8px; display: flex; gap: 10px; align-items: flex-start; }
+  .resa-date-pill {
+    padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .resa-name { font-size: 14px; font-weight: 700; color: var(--dark); line-height: 1.3; }
+  .resa-detail { font-size: 11px; color: var(--grey); margin-top: 2px; line-height: 1.4; }
+  .resa-footer {
+    padding: 8px 14px 10px; font-size: 11px; font-weight: 700;
+    letter-spacing: .5px; text-transform: uppercase;
+  }
+
+  /* ── TIPS/PHRASES SCREEN ── */
+  .tips-section { padding: 16px; }
+  .meteo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; }
+  .meteo-card {
+    background: var(--cream); border-radius: 14px; padding: 14px 10px;
+    text-align: center;
+  }
+  .meteo-circle {
+    width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .meteo-temp { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 700; color: #fff; }
+  .meteo-city { font-size: 11px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+  .meteo-hum  { font-size: 10px; color: var(--grey); line-height: 1.3; }
+
+  .phrases-grid { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+  .phrase-row {
+    background: var(--cream); border-radius: 10px; padding: 11px 14px;
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .phrase-jp { font-size: 13px; font-weight: 600; color: var(--dark); }
+  .phrase-fr { font-size: 12px; color: var(--grey); font-style: italic; text-align: right; }
+
+  .essentials-grid { display: flex; flex-direction: column; gap: 6px; }
+  .essential-row {
+    background: var(--cream); border-radius: 10px; padding: 12px 14px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .essential-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 4px; }
+  .essential-label { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 2px; }
+  .essential-val { font-size: 11px; color: var(--grey); line-height: 1.4; }
+
+  /* ── SECTION TITLES ── */
+  .screen-section-title {
+    font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--gold);
+    padding: 18px 16px 8px; display: flex; align-items: center; gap: 8px;
+  }
+  .screen-section-title::after {
+    content: ''; flex: 1; height: 1px; background: rgba(201,168,76,.2);
+  }
+
+  /* ── VOLS SECTION ── */
+  .vol-card {
+    background: var(--cream); border-radius: 14px; overflow: hidden;
+    margin-bottom: 10px; border-left: 4px solid var(--gold);
+  }
+  .vol-inner { padding: 13px 14px; }
+  .vol-type { font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 1px; margin-bottom: 4px; }
+  .vol-route { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+  .vol-detail { font-size: 11px; color: var(--grey); }
+  .vol-status { font-size: 10px; font-weight: 700; color: var(--green); margin-top: 4px; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 0; }
+
+  /* ── LOADING FALLBACK ── */
+  .no-google-font body { font-family: -apple-system, 'Helvetica Neue', sans-serif; }
+
+  /* ── ANIMATE ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .35s ease forwards; }
+  .fade-up-d1 { animation-delay: .05s; opacity: 0; }
+  .fade-up-d2 { animation-delay: .1s;  opacity: 0; }
+  .fade-up-d3 { animation-delay: .15s; opacity: 0; }
+
+  /* ── TODAY HIGHLIGHT ── */
+  .today-indicator {
+    background: var(--gold); color: var(--dark); font-size: 9px; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px; letter-spacing: 1px;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center; padding: 60px 24px; color: var(--grey);
+  }
+  .empty-state-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state-text { font-size: 15px; }
+</style>
+</head>
+<body>
+
+<div id="cover">
+  <div class="cover-tag">Carnet de Voyage Premium</div>
+  <div class="cover-title">SINGAPOUR</div>
+  <div class="cover-amp">&</div>
+  <div class="cover-title">JAPON</div>
+  <div class="cover-line"></div>
+  <div class="cover-date">13 — 30 AOÛT 2026</div>
+  <div class="cover-stats">
+    <div class="cover-stat"><div class="cover-stat-n">17</div><div class="cover-stat-l">Jours</div></div>
+    <div class="cover-stat"><div class="cover-stat-n">4</div><div class="cover-stat-l">Voyageurs</div></div>
+    <div class="cover-stat"><div class="cover-stat-n">6</div><div class="cover-stat-l">Villes</div></div>
+    <div class="cover-stat"><div class="cover-stat-n">5</div><div class="cover-stat-l">Hôtels</div></div>
+  </div>
+  <div class="cover-route">
+    <span class="first">Paris</span><div class="dot"></div>
+    <span>Singapour</span><div class="dot"></div>
+    <span>Osaka</span><div class="dot"></div>
+    <span>Kyoto</span><div class="dot"></div>
+    <span class="last">Tokyo</span>
+  </div>
+  <button class="cover-btn" onclick="startApp()">Commencer le voyage</button>
+</div>
+
+<div id="app" style="display:none">
+  <div id="topbar">
+    <button class="tb-back" id="backBtn" onclick="goBack()">← Retour</button>
+    <div>
+      <div class="tb-title" id="topTitle">Itinéraire</div>
+      <div class="tb-sub" id="topSub">SINGAPOUR & JAPON 2026</div>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+
+  <div id="main">
+
+    <!-- SCREEN: ITINERARY LIST -->
+    <div class="screen active" id="screen-itinerary">
+      <div class="days-list" id="daysList"></div>
+    </div>
+
+    <!-- SCREEN: DAY DETAIL -->
+    <div class="screen" id="screen-day">
+      <div id="day-detail"></div>
+    </div>
+
+    <!-- SCREEN: INFO -->
+    <div class="screen" id="screen-info">
+      <div class="info-section" id="infoContent"></div>
+    </div>
+
+    <!-- SCREEN: TIPS -->
+    <div class="screen" id="screen-tips">
+      <div class="tips-section" id="tipsContent"></div>
+    </div>
+
+  </div>
+
+  <div id="bottomnav">
+    <button class="nav-item active" onclick="showScreen('itinerary')" id="nav-itinerary">
+      <div class="nav-icon">🗓</div><div class="nav-label">Jours</div>
+    </button>
+    <button class="nav-item" onclick="showScreen('info')" id="nav-info">
+      <div class="nav-icon">✈</div><div class="nav-label">Infos</div>
+    </button>
+    <button class="nav-item" onclick="showScreen('tips')" id="nav-tips">
+      <div class="nav-icon">💡</div><div class="nav-label">Conseils</div>
+    </button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════
+const CHAPTERS = [
+  { id:'sg',    num:1, city:'SINGAPOUR', subtitle:'La cité-État futuriste',       dates:'14 – 17 août 2026',  color:'#2A6B7C', desc:'Entre modernité et tradition, Singapour vous accueille avec ses jardins spectaculaires, sa gastronomie unique et son architecture audacieuse.' },
+  { id:'osaka', num:2, city:'OSAKA',     subtitle:'La capitale gastronomique',     dates:'18 – 20 août 2026',  color:'#C8573F', desc:'Osaka, la capitale gastronomique du Japon, avec son légendaire Dotonbori, son château samouraï et ses marchés de street food.' },
+  { id:'kyoto', num:3, city:'KYOTO',     subtitle:'Geishas · Temples · Bambouseraie', dates:'21 – 23 août 2026', color:'#5B3A7E', desc:'Nara et ses cerfs sacrés, puis Kyoto l'enchanteresse — temples d'or, torii vermillon, bambouseraie et quartiers de geishas.' },
+  { id:'tokyo', num:4, city:'TOKYO',     subtitle:'La ville qui ne dort jamais',   dates:'24 – 28 août 2026',  color:'#1A1A1A', desc:'Tradition et futur fusionnent dans la capitale mondiale la plus fascinante. 5 nuits pour tout explorer.' },
+];
+
+const DAYS = [
+  {
+    id:1, chap:'sg', dayNum:1, date:'14 AOÛT', label:'14 AOÛT — ARRIVÉE SINGAPOUR',
+    location:'Changi · Jewel · Marina Bay', hotel:'Pan Pacific Orchid *****',
+    events:[
+      {time:'17h55', title:'Arrivée Changi T1 — Formalités', body:'Immigration file étrangers. Bagages. Prévoir 45-60 min entre atterrissage et sortie du terminal.', type:'transport', cost:'—'},
+      {time:'19h30', title:'Jewel Changi — Shiseido Forest Valley', body:'Passerelle depuis Hall Arrivées niveau 1. Cascade intérieure de 40m — record mondial ! Gratuit depuis tous les niveaux.', type:'activity', cost:'GRATUIT'},
+      {time:'20h00', title:'Light & Music Showcase', body:'Vendredi : shows à 20h, 21h et 22h. Meilleur spot niveaux 3-4 face à la cascade. Arriver 10 min avant.', type:'show', cost:'GRATUIT'},
+      {time:'20h45', title:'Dîner à Jewel — Tim Ho Wan', body:'Tim Ho Wan (dim sum B2), Nam Nam Noodle Bar, Food Court B2 ~5-8€/pers. La plupart ferment à 22h.', type:'meal', cost:'~10-17€/pers'},
+      {time:'21h30', title:'Grab → Pan Pacific Orchid', body:'App GRAB — commander depuis zone dédiée B1 de Jewel ou Hall Arrivées T1.', type:'transport', cost:'~20-33€ x4'},
+      {time:'22h15', title:'Check-in Pan Pacific Orchid', body:'10 Claymore Road. Nuit 1/4. Décalage France → Singapour : +6h en été.', type:'hotel', cost:'Réservé'},
+    ],
+    tip:'Décalage horaire +6h — éviter de dormir trop tôt pour s'adapter au fuseau horaire.',
+    note:'Demain : Marina Bay Sands 57e, Gardens by the Bay, Garden Rhapsody',
+  },
+  {
+    id:2, chap:'sg', dayNum:2, date:'15 AOÛT', label:'15 AOÛT — MARINA BAY',
+    location:'Cé La Vi · Gardens by the Bay · Supertrees', hotel:'Pan Pacific Orchid *****',
+    events:[
+      {time:'09h00', title:'Petit-déjeuner — Killiney Kopitiam', body:'Lucky Plaza #01-10. Kaya toast + œufs demi-cuits + kopi ~3-4€/pers. À éviter : buffet hôtel ~33€.', type:'meal', cost:'~3-5€'},
+      {time:'09h45', title:'Piscine Pan Pacific — 1h30', body:'Piscine free-form 22m. Aqua Bar en bord de piscine. Horaires 7h30-21h.', type:'activity', cost:'GRATUIT'},
+      {time:'11h40', title:'Merlion Park + Esplanade', body:'Statue du Merlion — photo incontournable avec MBS en arrière-plan. Esplanade "le Durian".', type:'activity', cost:'GRATUIT'},
+      {time:'12h30', title:'CÉ LA VI SkyBar — Déjeuner 57e', body:'MBS Tower 3. Vue 360° sur la skyline. Asian tapas premium. Réserver sur sg.celavi.com !', type:'meal', cost:'~26€ + repas'},
+      {time:'14h45', title:'Gardens by the Bay — Cloud Forest + Flower Dome', body:'Cloud Forest : forêt tropicale, cascade 35m, 7 niveaux. Flower Dome : record Guinness.', type:'activity', cost:'~27€/adulte'},
+      {time:'17h15', title:'Supertree Grove — Balade', body:'Accès gratuit. OCBC Skyway optionnel ~7€. Revenir pour Garden Rhapsody à 19h45.', type:'activity', cost:'GRATUIT'},
+      {time:'18h30', title:'Dîner Hawker — Food Court Gardens', body:'Satay, laksa, char kway teow. Ambiance hawker en plein air bord de mer.', type:'meal', cost:'~10-13€/pers'},
+      {time:'19h45', title:'Garden Rhapsody — GRATUIT', body:'18 Supertrees illuminés en rythme. Shows 19h45 et 20h45. Arriver 15 min avant !', type:'show', cost:'GRATUIT'},
+    ],
+    tip:'Réserver Cé La Vi exactement 1 mois avant (15 juillet) sur sg.celavi.com',
+    note:'Demain : Little India, Chinatown, Tanjong Beach Club, Clarke Quay',
+  },
+  {
+    id:3, chap:'sg', dayNum:3, date:'16 AOÛT', label:'16 AOÛT — SENTOSA & SOIRÉE',
+    location:'Little India · Chinatown · Tanjong Beach', hotel:'Pan Pacific Orchid *****',
+    events:[
+      {time:'09h00', title:'Petit-déjeuner Killiney Kopitiam', body:'Lucky Plaza, kaya toast + kopi ~3-4€/pers.', type:'meal', cost:'~3-5€'},
+      {time:'11h15', title:'Sri Veeramakaliamman Temple — Little India', body:'141 Serangoon Rd. Temple hindou dravidien très coloré. Entrée libre, chaussures à retirer.', type:'activity', cost:'GRATUIT'},
+      {time:'11h50', title:'Buddha Tooth Relic Temple — Chinatown', body:'288 South Bridge Road. Temple Tang Dynasty, dent sacrée du Bouddha. Tenue correcte.', type:'activity', cost:'GRATUIT'},
+      {time:'13h30', title:'Tanjong Beach Club — Session Daybed 3h', body:'Piscine + plage sable blanc, ambiance DJ. Cocktails ~11-14€/verre. Réserver 1 mois avant !', type:'activity', cost:'Min spend ~150€'},
+      {time:'19h30', title:'Croisière Singapore River — 40 min', body:'Clarke Quay Jetty. Vue sur la skyline nocturne de Singapour.', type:'activity', cost:'~15-20€/pers'},
+      {time:'21h00', title:'Spectra — Spectacle MBS GRATUIT', body:'Jets d'eau, lasers, mapping façade MBS. Chaque soir à 21h. Spot : Event Plaza.', type:'show', cost:'GRATUIT'},
+      {time:'21h20', title:'Clarke Quay — Bars & Street Food', body:'Bars, hawker stalls. Ambiance festive du samedi soir.', type:'meal', cost:'~15-25€'},
+    ],
+    tip:'Réserver Tanjong Beach Club dès le 16 juillet : tanjongbeachclub.com ou +65 9750 5323',
+    note:'Demain : Check-out Pan Pacific → Mondrian Duxton. Préparer les bagages ce soir !',
+  },
+  {
+    id:4, chap:'sg', dayNum:4, date:'17 AOÛT', label:'17 AOÛT — DUXTON HILL',
+    location:'Maxwell · Mondrian · Départ imminent', hotel:'Mondrian Duxton *****',
+    events:[
+      {time:'09h00', title:'Dernier matin Pan Pacific — Piscine + Buffet', body:'Buffet Mosella (~35€/pers). Profitez de la piscine une dernière fois. Check-out avant 12h.', type:'activity', cost:'~35€/pers'},
+      {time:'12h15', title:'Check-out Pan Pacific Orchid', body:'Late check-out 12h30 si possible. Déposer bagages en consigne Bell Desk (gratuit).', type:'hotel', cost:'—'},
+      {time:'13h30', title:'Déjeuner — Maxwell Food Centre', body:'Hawker mythique ! Tian Tian Chicken Rice (stall #01-10), Popiah, Fried Carrot Cake, Rojak.', type:'meal', cost:'~5-8€/pers'},
+      {time:'14h30', title:'Check-in Mondrian Singapore Duxton', body:'16A Duxton Hill. Design Art Déco réinterprété. Agoda #644071843.', type:'hotel', cost:'Réservé'},
+      {time:'15h00', title:'Canyon Club Rooftop Pool — Infinity Pool', body:'Vue shophouses Duxton Hill + skyline CBD. Cocktails californiens. Happy Hour ~8 SGD.', type:'activity', cost:'GRATUIT'},
+      {time:'18h20', title:'Dîner léger — Bottega di Carna ou Maxwell', body:'Option A : restaurant Mondrian (pastas fraîches). Option B : Maxwell ~5-8€. Repas léger !', type:'meal', cost:'~8-45€'},
+      {time:'19h40', title:'⚠ PRÉPARATION DÉPART — COUCHER AVANT 20H30', body:'Préparer bagages. Vérifier boarding pass Scoot TR898. Grab commandé pour 04h30. RÉVEIL 04H00.', type:'transport', cost:'—'},
+    ],
+    tip:'Grab depuis Mondrian pour 04h30 — commander la veille. Trajet aéroport ~25-30 min.',
+    note:'RÉVEIL 04H00 — Vol Scoot TR898 SIN → Osaka KIX — Départ 06h55',
+  },
+  {
+    id:5, chap:'osaka', dayNum:5, date:'18 AOÛT', label:'18 AOÛT — OSAKA ARRIVÉE',
+    location:'KIX · Dotonbori · Premier repas japonais', hotel:'Candeo Hotel Osaka *****',
+    events:[
+      {time:'04h00', title:'Réveil + Check-out Mondrian', body:'Lever immédiat. Passeports + boarding pass Scoot. Express check-out. Grab à 04h30.', type:'transport', cost:'—'},
+      {time:'06h55', title:'Vol Scoot TR898 SIN → KIX', body:'Durée 6h40. Télécharger NAVITIME + Google Maps Osaka offline. JR Pass à activer à KIX.', type:'transport', cost:'Réservé'},
+      {time:'14h35', title:'Arrivée KIX — Formalités + JR Pass', body:'File immigration 30-45 min en août. Échanger voucher JR Pass au bureau JR Ticket Office.', type:'transport', cost:'JR Pass inclus'},
+      {time:'15h35', title:'Haruka Express KIX → Osaka Station', body:'Inclus JR Pass ! ~50 min confortables avec espace bagages. Premier train japonais !', type:'transport', cost:'Inclus JR Pass'},
+      {time:'16h40', title:'Check-in Candeo Hotel Osaka The Tower', body:'Quartier Namba/Shinsaibashi. Rooftop Sky Bath + sauna. Agoda #644075711.', type:'hotel', cost:'Réservé'},
+      {time:'17h10', title:'Promenade Dotonbori — Premier aperçu', body:'Canal + enseignes géantes illuminées. Panneau Kani Doraku (crabe animé). Pont Ebisubashi.', type:'activity', cost:'GRATUIT'},
+      {time:'18h10', title:'Dîner — Premier repas japonais !', body:'Takoyaki Wanaka (~5€/portion), okonomiyaki (~10€), ou ramen simple.', type:'meal', cost:'~10-15€'},
+      {time:'19h10', title:'Sky Bath Rooftop Candeo Hotel', body:'Bains intérieur + extérieur avec vue panoramique sur Osaka. Douche AVANT obligatoire.', type:'activity', cost:'GRATUIT'},
+    ],
+    tip:'Tatouages interdits dans les bains japonais. Bains séparés homme/femme.',
+    note:'Demain : Château d'Osaka, Kuromon Market, Shinsaibashi, Dotonbori de nuit',
+  },
+  {
+    id:6, chap:'osaka', dayNum:6, date:'19 AOÛT', label:'19 AOÛT — OSAKA MUST DO',
+    location:'Château · Kuromon · Dotonbori · Okonomiyaki', hotel:'Candeo Hotel Osaka *****',
+    events:[
+      {time:'08h30', title:'Petit-déjeuner Konbini ou Kissaten', body:'7-Eleven/Lawson : onigiri + café chaud ~4-6€. Kissaten rétro japonais ~5-7€.', type:'meal', cost:'~4-7€'},
+      {time:'09h30', title:'Château d'Osaka — Osaka-jo', body:'8 étages, reconstruit 1931. Musée samouraï + armures. Panorama au sommet sur la ville.', type:'activity', cost:'~3,50€/pers'},
+      {time:'12h00', title:'Kuromon Ichiba — La cuisine d'Osaka', body:'170 stands depuis 1902. Huîtres grillées, wagyu brochette, takoyaki, tamagoyaki.', type:'meal', cost:'~20-30€/pers'},
+      {time:'13h30', title:'Dotonbori — Glico Man + Canal', body:'Glico Man depuis pont Ebisubashi. Croisière Tombori River ~800¥. Don Quijote 24h.', type:'activity', cost:'GRATUIT'},
+      {time:'15h00', title:'Shinsaibashi + Amemura', body:'Galerie marchande 600m. Amemura : streetwear, vintage, friperies. Triangle Park.', type:'activity', cost:'Shopping libre'},
+      {time:'16h30', title:'Dîner Okonomiyaki — Must d'Osaka !', body:'Fukutaro (Namba, référence locale) ou Mizuno (Dotonbori, institution depuis 1945).', type:'meal', cost:'~12-15€/pers'},
+      {time:'18h00', title:'Dotonbori de nuit', body:'Enseignes néons + reflets dans le canal. Spots photo : ponts Ebisubashi et Tazaemon.', type:'activity', cost:'GRATUIT'},
+    ],
+    tip:'Kuromon Ichiba : manger en marchant (kuidaore = culture d'Osaka). Ouvert 9h-18h.',
+    note:'Demain : Hiroshima & Miyajima — départ 06h50 en Shinkansen. Réveil 05h30.',
+  },
+  {
+    id:7, chap:'osaka', dayNum:7, date:'20 AOÛT', label:'20 AOÛT — HIROSHIMA & MIYAJIMA',
+    location:'Dôme UNESCO · Paix · Torii flottant · Mont Misen', hotel:'Candeo Hotel Osaka *****',
+    events:[
+      {time:'06h50', title:'Shinkansen Shin-Osaka → Hiroshima', body:'Gare SHIN-OSAKA (pas Osaka !). Hikari ~1h15. Arrivée 8h05. Inclus JR Pass.', type:'transport', cost:'Inclus JR Pass'},
+      {time:'08h30', title:'Dôme de la Bombe Atomique — UNESCO', body:'Genbaku Dome. Tour extérieur, accès 24h/24. Moment de recueillement. 6 août 1945.', type:'activity', cost:'GRATUIT'},
+      {time:'09h05', title:'Musée Mémorial de la Paix', body:'Visite émouvante ~1h30. Réserver OBLIGATOIRE sur hiroshima-museum.jp en août.', type:'activity', cost:'~1,10€/pers'},
+      {time:'11h50', title:'Ferry JR → Île de Miyajima', body:'Départs toutes les 15 min. Traversée 10 min avec vue sur le Torii depuis le bateau !', type:'transport', cost:'Inclus JR Pass'},
+      {time:'12h10', title:'Sanctuaire Itsukushima + Torii flottant', body:'Marée HAUTE à 14h33 (2,97m) → Torii flottant ! Galeries sur pilotis + cerfs sacrés.', type:'activity', cost:'~8€/pers'},
+      {time:'13h00', title:'Déjeuner rue Omotesando', body:'Kaki (huîtres grillées), anago meshi (anguille), momiji manju chauds.', type:'meal', cost:'~15-25€'},
+      {time:'14h15', title:'Téléphérique Mont Misen + Sommet (535m)', body:'Vue panoramique mer intérieure de Seto. DERNIER DÉPART vers le bas : 16h30 !', type:'activity', cost:'~11€/pers'},
+    ],
+    tip:'⚠ Marée haute à 14h33. Arriver à Miyajima AVANT 12h pour le Torii flottant !',
+    note:'Retour Osaka le soir. Demain check-out Candeo → Nara → Kyoto.',
+  },
+  {
+    id:8, chap:'kyoto', dayNum:8, date:'21 AOÛT', label:'21 AOÛT — NARA + TRANSIT KYOTO',
+    location:'Cerfs sacrés · Tōdai-ji · Maison japonaise', hotel:'AirBNB Minami Ku',
+    events:[
+      {time:'09h00', title:'Check-out Candeo + Consigne bagages', body:'Garder sac à dos léger uniquement. Récupérer bagages ~14h au retour. Bell Desk gratuit.', type:'hotel', cost:'GRATUIT'},
+      {time:'10h50', title:'Parc de Nara — Cerfs en liberté !', body:'Cerfs sacrés EN LIBERTÉ depuis +1300 ans. Shika senbei ~200¥. Attention aux sacs !', type:'activity', cost:'GRATUIT'},
+      {time:'11h15', title:'Tōdai-ji — Grand Bouddha UNESCO', body:'Plus grand bâtiment bois du monde. Bouddha 15m, 500 tonnes ! Trou du pilier = chance.', type:'activity', cost:'~3,50€/pers'},
+      {time:'12h35', title:'Déjeuner rapide à Nara', body:'Kakinoha-zushi (sushis feuille de kaki, unique à Nara). Nakatanidou : mochi battus main.', type:'meal', cost:'~15-20€'},
+      {time:'14h35', title:'JR Osaka → Kyoto + Taxi vers AirBNB', body:'JR Kyoto Line ~15-20 min. Puis taxi Kyoto Station → Minami Ward (~20 min, ~15-20€).', type:'transport', cost:'JR + ~20€ taxi'},
+      {time:'15h35', title:'Installation AirBNB Maison Minami Ku', body:'25-4 Higashikujō Kitamatsunokichō, Minami Ward. Réf. HM3CBJJKNC. Code boîte à clé.', type:'hotel', cost:'Réservé'},
+    ],
+    tip:'Maison traditionnelle machiya : tatamis, shoji, bain privé ofuro, jardin.',
+    note:'Demain : Fushimi Inari à 7h, Arashiyama, Gion — quartier des geishas',
+  },
+  {
+    id:9, chap:'kyoto', dayNum:9, date:'22 AOÛT', label:'22 AOÛT — TEMPLES & GEISHAS',
+    location:'Fushimi Inari · Arashiyama · Gion', hotel:'AirBNB Minami Ku',
+    events:[
+      {time:'07h05', title:'Fushimi Inari Taisha — Montée complète', body:'Des milliers de torii vermillon jusqu'au sommet (233m). À 7h : lumière dorée, peu de touristes !', type:'activity', cost:'GRATUIT'},
+      {time:'09h35', title:'Brunch au pied du sanctuaire', body:'Inari sushi (tofu frit fourré de riz), yakitori, dango, matcha latte. Torisei recommandé.', type:'meal', cost:'~8-12€'},
+      {time:'11h05', title:'Bambouseraie de Sagano — Arashiyama', body:'Tunnel de bambous géants (15-20m). Lumière filtrée spectaculaire. Sentier ~500m.', type:'activity', cost:'GRATUIT'},
+      {time:'11h35', title:'Tenryu-ji + Rivière Oi-gawa', body:'Temple zen UNESCO. Jardin Sogenchi. Pont Togetsu-kyo = photo incontournable.', type:'activity', cost:'~3€/pers'},
+      {time:'12h50', title:'Déjeuner Arashiyama', body:'Yudofu (tofu bouillon), Shigure-tei (terrasse vue rivière). Ou bento bord de rivière.', type:'meal', cost:'~15-20€'},
+      {time:'14h35', title:'Gion + Hanamikoji-dori', body:'Rue pavée avec ochaya (maisons de thé). Shimbashi + Shirakawa : canaux, saules, lanternes.', type:'activity', cost:'GRATUIT'},
+      {time:'17h00', title:'Cérémonie du thé + Maiko', body:'Expérience maiko/cérémonie du thé à Gion. Réserver via Klook ~40-60€/pers.', type:'activity', cost:'~40-60€'},
+      {time:'19h00', title:'Kiyomizudera — Temple de nuit', body:'Illuminations spéciales en été. Vue sur Kyoto la nuit depuis la terrasse en bois.', type:'activity', cost:'~3€/pers'},
+    ],
+    tip:'Respecter les geishas et maikos : ne pas bloquer les passages ni les approcher.',
+    note:'Demain : Kinkaku-ji tôt le matin, Nijo-jo, Nishiki Market, Philosopher's Path, Dîner Sumo',
+  },
+  {
+    id:10, chap:'kyoto', dayNum:10, date:'23 AOÛT', label:'23 AOÛT — PAVILLON D'OR & SUMO',
+    location:"Kinkaku-ji · Nijo-jo · Philosopher's Path", hotel:'AirBNB Minami Ku',
+    events:[
+      {time:'09h15', title:'Kinkaku-ji — Le Pavillon d'or', body:'Recouvert de feuilles d'or, reflet dans l'étang Kyoko-chi. Construit 1397. Avant 10h !', type:'activity', cost:'~3€/pers'},
+      {time:'10h15', title:'Nijo-jo — Château du Shogun', body:'Résidence Tokugawa, UNESCO. Planchers "rossignol" anti-ninja. Peintures tigres et grues.', type:'activity', cost:'~5€/pers'},
+      {time:'11h30', title:'Déjeuner — Nishiki Market', body:'130 stands, 400 ans. Tsukemono, yudofu, dango, matcha soft cream, tofu frais, mochi.', type:'meal', cost:'~10-15€'},
+      {time:'13h00', title:"Chemin des Philosophes — 2 km", body:'Canal + cerisiers. Eikan-do → Honen-in → Ginkaku-ji. Cafés artisanaux sur le chemin.', type:'activity', cost:'GRATUIT'},
+      {time:'15h00', title:'Ginkaku-ji — Pavillon d'Argent', body:'Temple zen XVe. Jardin de mousse immaculé. Kogetsudai : cône de sable = Mont Fuji.', type:'activity', cost:'~3€/pers'},
+      {time:'17h30', title:'Dîner-spectacle Sumo ★', body:'Sumo Dining Kyoto. Chanko nabe + démonstration lutteurs + photos. Expérience unique !', type:'meal', cost:'~80-120€/pers'},
+    ],
+    tip:'Réserver le dîner Sumo plusieurs semaines avant : sumodining.com ou Viator.',
+    note:'Demain : Shinkansen Kyoto → Tokyo (2h10 à 320 km/h). Toji Temple le matin.',
+  },
+  {
+    id:11, chap:'tokyo', dayNum:11, date:'24 AOÛT', label:'24 AOÛT — ARRIVÉE TOKYO',
+    location:'Shinkansen · Shinjuku · Omoide Yokocho', hotel:'Appartement Shinjuku',
+    events:[
+      {time:'09h00', title:'Visite libre — Toji Temple', body:'Pagode à 5 étages (55m, la plus haute du Japon). À 5 min à pied de la maison AirBNB.', type:'activity', cost:'GRATUIT'},
+      {time:'11h00', title:'Taxi maison → Gare de Kyoto', body:'Taxi ~15-20 min. Kyoto Station : l'une des plus grandes gares du Japon.', type:'transport', cost:'~15-20€ x4'},
+      {time:'11h30', title:'Achat billets Shinkansen + Ekiben', body:'~14 000¥ (~78€/pers). NON inclus JR Pass ! Siège côté droit (A/B) pour Mont Fuji.', type:'transport', cost:'~78€/pers'},
+      {time:'12h15', title:'Shinkansen Kyoto → Tokyo (Nozomi 2h10)', body:'2h10 à 320 km/h ! Mont Fuji visible côté droit ~50 min après Kyoto. Manger l'ekiben !', type:'transport', cost:'Billets achetés'},
+      {time:'15h05', title:'Check-in Appartement Shinjuku', body:'AirBNB Réf. HMMEQM5DS. 5 nuits à Tokyo ! Repérer konbinis + station métro.', type:'hotel', cost:'Réservé'},
+      {time:'16h05', title:'Vue gratuite — Tokyo Metropolitan Gov. Building', body:'45e étage GRATUIT. Panorama Shinjuku + Mont Fuji par beau temps. 5 min de l'appart !', type:'activity', cost:'GRATUIT'},
+      {time:'17h35', title:'Premier dîner — Omoide Yokocho', body:'"Memory Lane" : ruelles micro-bars yakitori fumants. Brochettes grillées + bières japonaises.', type:'meal', cost:'~15-20€'},
+    ],
+    tip:'Le Mont Fuji est visible côté droit du train (rangée A/B) environ 50 min après Kyoto.',
+    note:'Demain : Asakusa, Senso-ji, Tokyo Skytree (634m), Sumida River',
+  },
+  {
+    id:12, chap:'tokyo', dayNum:12, date:'25 AOÛT', label:'25 AOÛT — ASAKUSA & SKYTREE',
+    location:'Senso-ji · 634m · Sumida River', hotel:'Appartement Shinjuku',
+    events:[
+      {time:'09h00', title:'Sensō-ji — Temple fondé en 645', body:'Kaminarimon (grande lanterne rouge) + Nakamise-dori. O-mikuji fortune papier ~100¥.', type:'activity', cost:'GRATUIT'},
+      {time:'09h45', title:'Nakamise-dori + Street food', body:'Kagetsudō (melon pan géant), ningyo-yaki. Souvenirs, yukatas, baguettes laquées.', type:'meal', cost:'~10-15€'},
+      {time:'10h15', title:'Location Kimono — 3-4h', body:'Yae no Komichi, Wargo Asakusa, Furifu. Tenue + coiffure + accessoires.', type:'activity', cost:'~20-30€/pers'},
+      {time:'10h45', title:'Déjeuner — Daikokuya Tempura', body:'Institution depuis 1887. Tempura-don (~15-20€). Arriver avant le rush du midi.', type:'meal', cost:'~15-20€'},
+      {time:'11h45', title:'Balade Sumida River + Asahi Beer Hall', body:'Vue Skytree depuis pont Azumabashi. Asahi Beer Hall (flamme dorée Philippe Starck, 70m).', type:'activity', cost:'GRATUIT'},
+      {time:'12h30', title:'Tokyo Skytree — 634m !', body:'Tembo Deck 350m (~20€). Option Galleria 450m (+10€). Réserver en ligne obligatoire !', type:'activity', cost:'~20€/pers'},
+      {time:'14h30', title:'Mini croisière Sumida River (optionnel)', body:'Suijō Bus Asakusa → Hamarikyu. Vue ponts colorés. ~40-60 min.', type:'activity', cost:'~12-20€'},
+    ],
+    tip:'Réserver le Skytree en ligne à l'avance : souvent épuisé en plein été.',
+    note:'Demain : Harajuku, Meiji Shrine, Shibuya Crossing, Shibuya Sky rooftop',
+  },
+  {
+    id:13, chap:'tokyo', dayNum:13, date:'26 AOÛT', label:'26 AOÛT — HARAJUKU & SHIBUYA',
+    location:'Meiji Shrine · Kawaii · Scramble · Shibuya Sky', hotel:'Appartement Shinjuku',
+    events:[
+      {time:'09h25', title:'Meiji Shrine — Forêt en plein Tokyo', body:'70 ha, 365 espèces d'arbres. Torii cèdre 12m. Rituel purification temizuya.', type:'activity', cost:'GRATUIT'},
+      {time:'10h25', title:'Yoyogi Park — Pique-nique ou balade', body:'Pique-nique, danse, musiciens de rue. Belle lumière pour photos sous les arbres.', type:'activity', cost:'GRATUIT'},
+      {time:'10h55', title:'Takeshita Street — Culture Kawaii', body:'Mode harajuku, vintage, streetwear. Marion Crêpes depuis 1977 : ~6-8€.', type:'activity', cost:'Crêpes ~6-8€'},
+      {time:'12h00', title:'Déjeuner Omotesando', body:'Afuri Ramen (yuzu léger), Gyukatsu Motomura (katsu bœuf sur pierre chaude).', type:'meal', cost:'~12-18€'},
+      {time:'13h30', title:'Shibuya Crossing — Carrefour du monde', body:'Jusqu'à 3000 personnes simultanément. Statue Hachikō. Vue depuis Starbucks niveau 2.', type:'activity', cost:'GRATUIT'},
+      {time:'14h00', title:'Shibuya Sky — 46e étage', body:'Vue 360° : Shinjuku, Tokyo Tower, Fuji. Plateforme verre ouverte sur le ciel. Réserver !', type:'activity', cost:'~20€/pers'},
+      {time:'15h30', title:'Shibuya PARCO + Miyashita Park', body:'Pokémon Center Shibuya (6F), Nintendo Tokyo (6F), galeries d'art.', type:'activity', cost:'Shopping libre'},
+      {time:'17h00', title:'Nonbei Yokocho + Soirée Shibuya', body:'"Drunkard\'s Alley" : bars yakitori intimistes. Karaoke Big Echo, izakaya ~20-30€.', type:'meal', cost:'~20-30€'},
+    ],
+    tip:'Réserver Shibuya Sky en ligne : souvent complet plusieurs jours à l'avance en été.',
+    note:'Demain : Shinjuku Gyoen, Golden Gai, Omoide Yokocho, Kabukicho',
+  },
+  {
+    id:14, chap:'tokyo', dayNum:14, date:'27 AOÛT', label:'27 AOÛT — SHINJUKU & GOLDEN GAI',
+    location:'Gyoen · Yakitori · 300 micro-bars', hotel:'Appartement Shinjuku',
+    events:[
+      {time:'Matin', title:'Shinjuku Gyoen — Parc Impérial', body:'500 espèces, jardins français + anglais + japonais. À 5 min de l'appart. Fraîcheur en août.', type:'activity', cost:'~3€/pers'},
+      {time:'12h30', title:'Déjeuner Shinjuku', body:'Ichiran Ramen (tonkotsu cabines individuelles ~12€), Fuunji (tsukemen), Gyudon.', type:'meal', cost:'~8-15€'},
+      {time:'13h45', title:'Vue Gratuite — TMG Building 45e étage', body:'Panorama Shinjuku + Mont Fuji. Deux tours nord/sud. À 5 min de l'appartement !', type:'activity', cost:'GRATUIT'},
+      {time:'14h45', title:'Shopping Shinjuku', body:'Takashimaya Times Square, Bic Camera, Kinokuniya (livres français niveau 6 !), Don Quijote.', type:'activity', cost:'Shopping libre'},
+      {time:'16h30', title:'Godzilla Head + Kabukicho Tower', body:'Statue Godzilla sur le Gracery Hotel. Kabukicho Tower (2023) : cinéma Toho, clubs.', type:'activity', cost:'GRATUIT'},
+      {time:'17h00', title:'Omoide Yokocho — Memory Lane', body:'Ruelles mythiques. Yakitori + bières. Brochettes ~2-4€/pièce. Ambiance rétro.', type:'meal', cost:'~10-15€'},
+      {time:'19h30', title:'Golden Gai — Expérience unique de Tokyo', body:'300 micro-bars, 5-10 personnes max. Bars jazz, punk, manga. Entrée 500-1000¥.', type:'activity', cost:'~30-50€'},
+    ],
+    tip:'Golden Gai : certains bars refusent les touristes — respecter l'affichage en façade.',
+    note:'Demain : Akihabara, teamLab Borderless, Odaiba, Rainbow Bridge illuminé',
+  },
+  {
+    id:15, chap:'tokyo', dayNum:15, date:'28 AOÛT', label:'28 AOÛT — AKIHABARA & TEAMLAB',
+    location:'Gaming · Art numérique immersif · Odaiba', hotel:'Appartement Shinjuku',
+    events:[
+      {time:'09h25', title:'Arcades SEGA & Taito — Akihabara', body:'Capitale mondiale des arcades. Taiko no Tatsujin, Dance Rush, UFO Catchers.', type:'activity', cost:'~10-20€'},
+      {time:'10h25', title:'Super Potato + Animate + Mandarake', body:'Super Potato : rétro gaming (Super Famicom, GameBoy). Mandarake : manga rare, figurines.', type:'activity', cost:'Shopping libre'},
+      {time:'11h25', title:'Maid Café — Expérience incontournable', body:'@home café (4F Akihabara UDX). Set boisson + gâteau ~15-20€. Jeux interactifs.', type:'activity', cost:'~15-20€'},
+      {time:'12h25', title:'Déjeuner Akihabara', body:'Menya Musashi (tsukemen réputé), Kura Sushi (kaiten-zushi), Gyudon (~5-7€).', type:'meal', cost:'~10-15€'},
+      {time:'14h00', title:'Unicorn Gundam (19,7m !) + DiverCity — Odaiba', body:'Statue RX-0 échelle 1:1. Transformations animées horaires. Gundam Base Tokyo (6F).', type:'activity', cost:'GRATUIT ext.'},
+      {time:'14h45', title:'teamLab Borderless — À NE PAS RATER !', body:'Art numérique immersif. Forêts de cristaux, océan de fleurs, cascade de papillons. 2h min.', type:'show', cost:'~20€/pers'},
+      {time:'17h15', title:'Coucher de soleil — Odaiba Marine Park', body:'Vue Rainbow Bridge. Réplique Statue de la Liberté. Bridge illuminé arc-en-ciel la nuit.', type:'activity', cost:'GRATUIT'},
+    ],
+    tip:'Réserver teamLab Borderless OBLIGATOIREMENT en ligne sur teamlab.art avant le départ !',
+    note:'Demain : Check-out · Derniers achats Don Quijote · Aéroport Haneda T3',
+  },
+  {
+    id:16, chap:'tokyo', dayNum:16, date:'29 AOÛT', label:'29 AOÛT — RETOUR VERS PARIS',
+    location:'Haneda · Vietnam Airlines · Au revoir Japon', hotel:'Vol Vietnam Airlines',
+    events:[
+      {time:'08h00', title:'Dernier petit-déjeuner Tokyo', body:'Konbini (café + onigiri ~5€) ou kissaten pour une dernière fois. Matcha latte à emporter.', type:'meal', cost:'~5-10€'},
+      {time:'09h00', title:'Check-out Appartement Shinjuku', body:'Vérifier toutes les pièces. Passeports + boarding pass Vietnam Airlines. Réf. HMMEQM5DS.', type:'hotel', cost:'—'},
+      {time:'10h30', title:'Derniers achats — Don Quijote Shinjuku', body:'Matcha KitKat, Calbee chips, instant ramen, sauces. Cosmétiques Biore UV, masques.', type:'activity', cost:'~20-50€'},
+      {time:'11h30', title:'Shinjuku → Haneda T3 (Keikyu)', body:'Yamanote → Shinagawa (~13 min) + Keikyu Airport Express → HND T3 (~13 min). Total ~30 min.', type:'transport', cost:'~3,50€/pers'},
+      {time:'12h30', title:'HND T3 — Enregistrement Vietnam Airlines', body:'Bagages soute max 23 kg. Sécurité 13h. Tax Free : récupérer TVA sur achats japonais.', type:'transport', cost:'—'},
+      {time:'13h45', title:'Dernier repas japonais à l'aéroport', body:'Haneda Ichiba (marché sushis), ramen, tonkatsu. Duty free : whisky japonais, matcha, Royce.', type:'meal', cost:'~15€'},
+      {time:'16h35', title:'Décollage HND → Hanoï → Paris CDG', body:'Escale Hanoï ~3h15. Arrivée Paris CDG T2C le 30 août à 07h00. Réf. Trip.com 1306267919572900.', type:'transport', cost:'Réservé'},
+    ],
+    tip:'Tax Free japonais : récupérer la TVA (tampon tax-free sur passeport) avant embarquement.',
+    note:'Arrivée Paris CDG Terminal 2C — 30 août à 07h00 | RER B ou taxi vers Paris',
+  },
+];
+
+const VOLS = [
+  {type:'ALLER',   route:'Paris CDG → Singapour SIN', airline:'Turkish Airlines TK1803', schedule:'13/08 · 22h10 → 14/08 · 17h55'},
+  {type:'TRANSIT', route:'Singapour SIN → Osaka KIX',  airline:'Scoot TR898',             schedule:'18/08 · 06h55 → 18/08 · 14h35'},
+  {type:'RETOUR',  route:'Tokyo HND → Paris CDG',       airline:'Vietnam Airlines VN50/VN17', schedule:'29/08 · 16h35 → 30/08 · 07h00'},
+];
+
+const RESAS = [
+  {date:'15 AOÛT', name:'Cé La Vi SkyBar', detail:'sg.celavi.com · Cover 38 SGD/pers (1 boisson incluse)', deadline:'Réserver dès le 15 juillet', color:'#C9A84C'},
+  {date:'16 AOÛT', name:'Tanjong Beach Club', detail:'tanjongbeachclub.com · +65 9750 5323 · Session daybed 13h30-16h30', deadline:'Réserver dès le 16 juillet', color:'#C8573F'},
+  {date:'20 AOÛT', name:'Musée Mémorial Hiroshima', detail:'hiroshima-museum.jp · 200¥/pers · File > 1h sans réservation en août', deadline:'Réserver avant le départ', color:'#2A6B7C'},
+  {date:'23 AOÛT', name:'Dîner Spectacle Sumo Kyoto', detail:'sumodining.com ou Viator · Chanko nabe + démo lutteurs · ~80-120€/pers', deadline:'Réserver plusieurs semaines avant', color:'#5B3A7E'},
+  {date:'28 AOÛT', name:'teamLab Borderless', detail:'teamlab.art · ~3200¥ (~20€) · Azabudai Hills, Minato', deadline:'Réserver avant le départ', color:'#1A1A1A'},
+  {date:'28 AOÛT', name:'Night Safari Singapour', detail:'mandai.com ou Klook · ~37-44€/adulte · Samedi souvent complet', deadline:'Réserver avant le départ', color:'#2E6B3E'},
+];
+
+const PHRASES = [
+  {jp:'Arigatō gozaimasu', fr:'Merci beaucoup'},
+  {jp:'Sumimasen', fr:'Excusez-moi / Pardon'},
+  {jp:'Ikura desu ka ?', fr:'Combien ça coûte ?'},
+  {jp:'Doko desu ka ?', fr:'Où est... ?'},
+  {jp:'Oishii !', fr:"C'est délicieux !"},
+  {jp:'Kore wo kudasai', fr:'Je voudrais ceci'},
+  {jp:'Toire wa doko ?', fr:'Où sont les toilettes ?'},
+  {jp:'Eigo hanasemasu ka ?', fr:'Parlez-vous anglais ?'},
+];
+
+const ESSENTIALS = [
+  {label:'Vêtements légers', val:'Lin, coton, matières respirantes. Août = très chaud et humide.'},
+  {label:'Chaussures confortables', val:'15-20 km/jour ! Privilégier sans lacets pour les temples.'},
+  {label:'Tenue pour temples', val:'Épaules et genoux couverts dans certains sanctuaires.'},
+  {label:'Trousse pharmacie', val:'Anti-diarrhée, antihistaminiques, crème anti-moustiques DEET.'},
+  {label:'Adaptateur électrique', val:'Singapour : Type G (3 broches). Japon : Type A (2 broches plates, 100V).'},
+  {label:'Consignes gare (Japon)', val:'Coin lockers disponibles dans toutes les grandes gares japonaises.'},
+];
+
+// ════════════════════════════════════════════════════════
+// APP STATE
+// ════════════════════════════════════════════════════════
+let currentScreen = 'itinerary';
+let currentDay = null;
+let history = [];
+
+// ════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════
+function getTodayDayId() {
+  const now = new Date();
+  const tripStart = new Date(2026, 7, 13); // Aug 13
+  const diff = Math.floor((now - tripStart) / 86400000);
+  if (diff >= 0 && diff < 17) return diff + 1;
+  return null;
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ════════════════════════════════════════════════════════
+// COVER → APP
+// ════════════════════════════════════════════════════════
+function startApp() {
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('app').style.display = 'flex';
+  renderDaysList();
+  renderInfo();
+  renderTips();
+  setTimeout(() => updateProgress(), 100);
+}
+
+// ════════════════════════════════════════════════════════
+// SCREENS
+// ════════════════════════════════════════════════════════
+function showScreen(name, pushHistory=true) {
+  if (name !== 'day' && pushHistory && currentScreen !== name) {
+    history = [];
+  }
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  currentScreen = name;
+
+  // Nav
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (['itinerary','info','tips'].includes(name)) {
+    document.getElementById('nav-'+name)?.classList.add('active');
+  }
+
+  // Top bar
+  const backBtn = document.getElementById('backBtn');
+  if (name === 'day') {
+    backBtn.classList.add('show');
+    document.getElementById('topTitle').textContent = currentDay ? currentDay.date : '';
+    document.getElementById('topSub').textContent = currentDay ? currentDay.location : '';
+  } else {
+    backBtn.classList.remove('show');
+    const titles = {itinerary:'Itinéraire', info:'Vols & Réservations', tips:'Conseils'};
+    document.getElementById('topTitle').textContent = titles[name] || '';
+    document.getElementById('topSub').textContent = 'SINGAPOUR & JAPON 2026';
+  }
+
+  // Scroll top
+  document.getElementById('main').scrollTop = 0;
+  updateProgress();
+}
+
+function goBack() {
+  showScreen('itinerary');
+}
+
+function updateProgress() {
+  const today = getTodayDayId();
+  if (!today) { document.getElementById('progressBar').style.width = '0%'; return; }
+  const pct = ((today-1) / 16) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+// ════════════════════════════════════════════════════════
+// RENDER: DAYS LIST
+// ════════════════════════════════════════════════════════
+function renderDaysList() {
+  const container = document.getElementById('daysList');
+  const todayId = getTodayDayId();
+  let html = '';
+  let lastChap = null;
+
+  DAYS.forEach(day => {
+    if (day.chap !== lastChap) {
+      const ch = CHAPTERS.find(c => c.id === day.chap);
+      html += `
+        <div class="chapter-header">
+          <div class="chapter-header-inner">
+            <div class="chapter-num"><div class="chapter-num-n">${ch.num}</div></div>
+            <div>
+              <div class="chapter-city" style="color:#fff">${ch.city}</div>
+              <div class="chapter-dates" style="color:${ch.color}">${ch.dates}</div>
+              <div class="chapter-desc">${ch.desc.substring(0,80)}...</div>
+            </div>
+          </div>
+        </div>`;
+      lastChap = day.chap;
+    }
+
+    const ch = CHAPTERS.find(c => c.id === day.chap);
+    const isToday = (day.id === todayId);
+    const previewTypes = [...new Set(day.events.slice(0,4).map(e => e.type))];
+    const pillsHtml = previewTypes.map(t => `<span class="preview-pill pill-${t}">${pillLabel(t)}</span>`).join('');
+    const moreCount = day.events.length - 4;
+
+    html += `
+      <div class="day-card fade-up" onclick="openDay(${day.id})">
+        <div class="day-card-header">
+          <div class="day-num-badge" style="background:${ch.color}">
+            <div class="day-num-j">JOUR</div>
+            <div class="day-num-n" style="color:#fff">${day.dayNum}</div>
+          </div>
+          <div class="day-card-info">
+            <div class="day-card-date">${esc(day.date)}${isToday ? ' <span class="today-indicator">AUJOURD\'HUI</span>' : ''}</div>
+            <div class="day-card-loc">${esc(day.location)}</div>
+          </div>
+          <div class="day-card-hotel" style="background:${ch.color};color:#fff;font-size:9px;max-width:110px;line-height:1.2">${esc(day.hotel.replace(' *****',''))}</div>
+        </div>
+        <div class="day-card-preview">
+          ${pillsHtml}
+          ${moreCount > 0 ? `<span class="day-preview-more">+${moreCount} étapes</span>` : ''}
+        </div>
+      </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function pillLabel(type) {
+  const m = {transport:'Transport', activity:'Activité', meal:'Repas', hotel:'Séjour', show:'Spectacle', normal:'Info'};
+  return m[type] || type;
+}
+
+// ════════════════════════════════════════════════════════
+// RENDER: DAY DETAIL
+// ════════════════════════════════════════════════════════
+function openDay(id) {
+  currentDay = DAYS.find(d => d.id === id);
+  if (!currentDay) return;
+  const ch = CHAPTERS.find(c => c.id === currentDay.chap);
+
+  let evHtml = '';
+  currentDay.events.forEach((ev, i) => {
+    const isLast = i === currentDay.events.length - 1;
+    const costHtml = ev.cost && ev.cost !== '—' && ev.cost !== '---'
+      ? `<div class="tl-cost">${esc(ev.cost)}</div>` : '';
+    evHtml += `
+      <div class="tl-item type-${ev.type}">
+        <div class="tl-left">
+          <div class="tl-dot"></div>
+          ${!isLast ? '<div class="tl-line"></div>' : ''}
+        </div>
+        <div class="tl-card">
+          ${costHtml}
+          <div class="tl-time">${esc(ev.time)}</div>
+          <div class="tl-title">${esc(ev.title)}</div>
+          <div class="tl-body">${esc(ev.body)}</div>
+        </div>
+      </div>`;
+  });
+
+  const tipHtml = currentDay.tip ? `
+    <div class="tip-box">
+      <div class="tip-label">BON À SAVOIR</div>
+      <div class="tip-text">${esc(currentDay.tip)}</div>
+    </div>` : '';
+
+  const noteHtml = currentDay.note ? `
+    <div class="note-bar">
+      <div class="note-label">DEMAIN</div>
+      <div class="note-text">${esc(currentDay.note)}</div>
+    </div>` : '';
+
+  document.getElementById('day-detail').innerHTML = `
+    <div class="detail-header" style="background:${ch.color}20;border-bottom:2px solid ${ch.color}">
+      <div style="background:${ch.color};padding:20px 16px 16px;">
+        <div class="detail-day-row">
+          <div class="detail-badge" style="background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4)">
+            <div class="detail-badge-j" style="color:rgba(255,255,255,.7)">JOUR</div>
+            <div class="detail-badge-n" style="color:#fff">${currentDay.dayNum}</div>
+          </div>
+          <div class="detail-date-block">
+            <div class="detail-date">${esc(currentDay.label.split('—')[0].trim())}</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:rgba(255,255,255,.8);margin-top:2px">${esc((currentDay.label.split('—')[1]||'').trim())}</div>
+            <div class="detail-loc">${esc(currentDay.location)}</div>
+          </div>
+          <div class="detail-hotel-pill" style="background:rgba(255,255,255,.2);color:#fff">${esc(currentDay.hotel)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="timeline">
+      ${evHtml}
+      ${tipHtml}
+      ${noteHtml}
+    </div>`;
+
+  showScreen('day');
+  document.getElementById('main').scrollTop = 0;
+}
+
+// ════════════════════════════════════════════════════════
+// RENDER: INFO
+// ════════════════════════════════════════════════════════
+function renderInfo() {
+  let html = '';
+
+  // VOLS
+  html += `<div class="screen-section-title">Vols</div>`;
+  VOLS.forEach(v => {
+    html += `
+      <div class="vol-card">
+        <div class="vol-inner">
+          <div class="vol-type">${esc(v.type)}</div>
+          <div class="vol-route">${esc(v.route)}</div>
+          <div class="vol-detail">${esc(v.airline)}</div>
+          <div class="vol-detail">${esc(v.schedule)}</div>
+          <div class="vol-status">Confirmé</div>
+        </div>
+      </div>`;
+  });
+
+  // HOTELS
+  html += `<div class="screen-section-title">Hébergements</div>`;
+  const hotels = [
+    {dates:'14-17 AOÛT', name:'Pan Pacific Orchid', stars:'*****', addr:'10 Claymore Road, Singapore', ref:'Agoda'},
+    {dates:'17 AOÛT', name:'Mondrian Singapore Duxton', stars:'*****', addr:'16A Duxton Hill, Singapore', ref:'#644071843'},
+    {dates:'18-20 AOÛT', name:'Candeo Hotel Osaka The Tower', stars:'*****', addr:'Namba, Osaka', ref:'#644075711'},
+    {dates:'21-23 AOÛT', name:'AirBNB Maison Minami Ku', stars:'Machiya', addr:'25-4 Higashikujō, Kyoto', ref:'HM3CBJJKNC'},
+    {dates:'24-28 AOÛT', name:'Appartement Shinjuku', stars:'AirBNB', addr:'Shinjuku, Tokyo', ref:'HMMEQM5DS'},
+  ];
+  html += `<div class="info-card"><div class="info-card-body" style="padding:8px 16px">`;
+  hotels.forEach(h => {
+    html += `
+      <div class="info-row">
+        <div>
+          <div class="info-row-label">${esc(h.name)}</div>
+          <div style="font-size:10px;color:#C9A84C;font-weight:600;margin-top:1px">${esc(h.stars)} · ${esc(h.dates)}</div>
+          <div style="font-size:10px;color:#999;margin-top:1px">${esc(h.addr)}</div>
+        </div>
+        <div class="info-row-val" style="font-size:10px;color:#5B3A7E;font-weight:700">${esc(h.ref)}</div>
+      </div>`;
+  });
+  html += `</div></div>`;
+
+  // RESERVATIONS
+  html += `<div class="screen-section-title">Réservations essentielles</div>`;
+  RESAS.forEach(r => {
+    html += `
+      <div class="resa-card">
+        <div class="resa-header">
+          <div class="resa-date-pill" style="background:${r.color};color:#fff">${esc(r.date)}</div>
+          <div>
+            <div class="resa-name">${esc(r.name)}</div>
+            <div class="resa-detail">${esc(r.detail)}</div>
+          </div>
+        </div>
+        <div class="resa-footer" style="color:${r.color};background:${r.color}15;">
+          A réserver : ${esc(r.deadline)}
+        </div>
+      </div>`;
+  });
+
+  // TRANSPORTS
+  html += `<div class="screen-section-title">Transports clés</div>`;
+  const transports = [
+    {label:'EZ-Link Card (Singapour)', val:'~10 SGD — carte MRT rechargeable, réseau complet'},
+    {label:'GRAB App', val:'Uber local Singapour — télécharger AVANT le départ'},
+    {label:'JR Kansai-Hiroshima Pass 5j.', val:'~95€/pers — Klook ou japan-experience.com — activer le 18/08 à KIX'},
+    {label:'Suica / Pasmo (Japon)', val:'Carte IC rechargeable — métros, trains, konbinis'},
+    {label:'Shinkansen Kyoto→Tokyo', val:'~78€/pers — NON inclus dans le JR Pass — siège côté droit (A/B)'},
+    {label:'NAVITIME for Japan', val:'Meilleure app pour les transports japonais'},
+  ];
+  html += `<div class="info-card"><div class="info-card-body" style="padding:8px 16px">`;
+  transports.forEach(t => {
+    html += `<div class="info-row"><div class="info-row-label">${esc(t.label)}</div><div class="info-row-val">${esc(t.val)}</div></div>`;
+  });
+  html += `</div></div><div style="height:20px"></div>`;
+
+  document.getElementById('infoContent').innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════
+// RENDER: TIPS
+// ════════════════════════════════════════════════════════
+function renderTips() {
+  let html = '';
+
+  // METEO
+  html += `<div class="screen-section-title">Météo en août</div>`;
+  const meteos = [
+    {city:'SINGAPOUR', temp:'31°C', hum:'Humidité 80-90%\nPluies courtes', color:'#2A6B7C'},
+    {city:'OSAKA/KYOTO', temp:'35°C', hum:'Chaud & humide\nSPF 50+ vital', color:'#C8573F'},
+    {city:'TOKYO', temp:'33°C', hum:'Chaleur accablante\nVentil. portable', color:'#1A1A1A'},
+  ];
+  html += `<div class="meteo-grid">`;
+  meteos.forEach(m => {
+    html += `
+      <div class="meteo-card">
+        <div class="meteo-circle" style="background:${m.color}">
+          <div class="meteo-temp">${esc(m.temp)}</div>
+        </div>
+        <div class="meteo-city">${esc(m.city)}</div>
+        <div class="meteo-hum">${esc(m.hum)}</div>
+      </div>`;
+  });
+  html += `</div>`;
+
+  // ESSENTIALS
+  html += `<div class="screen-section-title">Essentiels à emporter</div>`;
+  html += `<div class="essentials-grid">`;
+  ESSENTIALS.forEach(e => {
+    html += `
+      <div class="essential-row">
+        <div class="essential-dot"></div>
+        <div><div class="essential-label">${esc(e.label)}</div><div class="essential-val">${esc(e.val)}</div></div>
+      </div>`;
+  });
+  html += `</div>`;
+
+  // PHRASES
+  html += `<div class="screen-section-title">Phrases utiles en japonais</div>`;
+  html += `<div class="phrases-grid">`;
+  PHRASES.forEach(p => {
+    html += `
+      <div class="phrase-row">
+        <div class="phrase-jp">${esc(p.jp)}</div>
+        <div class="phrase-fr">${esc(p.fr)}</div>
+      </div>`;
+  });
+  html += `</div><div style="height:20px"></div>`;
+
+  document.getElementById('tipsContent').innerHTML = html;
+}
+</script>
+
+<!-- PWA Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
