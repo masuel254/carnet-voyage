@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SG Japon 2026">
+<title>Singapour et Japon 2026</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,'Helvetica Neue',sans-serif;background:#1a1a1a;height:100%;overflow:hidden}
+html{height:100%}
+/* COVER - shown by default */
+#cover{position:fixed;inset:0;z-index:999;background:#1a1a1a;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;gap:0}
+.cv-tag{font-size:10px;font-weight:700;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:18px}
+.cv-big{font-size:clamp(42px,13vw,62px);font-weight:800;color:#fff;line-height:.9;text-align:center}
+.cv-amp{font-size:20px;color:#C9A84C;margin:8px 0}
+.cv-line{width:60px;height:2px;background:#C9A84C;margin:14px auto}
+.cv-date{font-size:12px;font-weight:600;color:#F2E6C2;letter-spacing:2px}
+.cv-stats{display:flex;gap:10px;margin-top:22px}
+.cv-stat{background:#272727;border-radius:10px;padding:11px 15px;text-align:center}
+.cv-sn{font-size:24px;font-weight:800;color:#C9A84C;line-height:1}
+.cv-sl{font-size:9px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.cv-route{display:flex;align-items:center;gap:5px;margin-top:18px;flex-wrap:wrap;justify-content:center}
+.cv-route span{font-size:9px;font-weight:700;letter-spacing:1.5px;color:#aaa;text-transform:uppercase}
+.cv-dot{width:4px;height:4px;border-radius:50%;background:#C9A84C;flex-shrink:0}
+.cv-hl{color:#C9A84C !important}
+#startBtn{margin-top:30px;background:#C9A84C;color:#1a1a1a;border:none;border-radius:50px;padding:16px 44px;font-size:15px;font-weight:700;letter-spacing:1px;cursor:pointer;-webkit-appearance:none;appearance:none;display:block}
+/* APP - hidden by default */
+#app{display:none;height:100dvh;flex-direction:column;overflow:hidden}
+/* TOP BAR */
+#topbar{background:#1a1a1a;padding:calc(env(safe-area-inset-top,12px) + 12px) 16px 12px;display:flex;align-items:center;gap:10px;border-bottom:2px solid #C9A84C;flex-shrink:0}
+#backBtn{background:#2a2a2a;border:none;border-radius:8px;padding:8px 12px;color:#C9A84C;font-size:13px;font-weight:700;cursor:pointer;display:none}
+#backBtn.show{display:block}
+#nextBtn{background:#C9A84C;border:none;border-radius:8px;padding:8px 12px;color:#1a1a1a;font-size:13px;font-weight:700;cursor:pointer;display:none;white-space:nowrap}
+#nextBtn.show{display:block}
+#topTitle{flex:1;font-size:16px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#topSub{font-size:10px;color:#C9A84C;letter-spacing:1px;font-weight:500}
+.prog{background:#2a2a2a;height:3px;flex-shrink:0}
+.prog-fill{height:100%;background:#C9A84C;width:0%;transition:width .4s}
+/* BOTTOM NAV */
+#bnav{background:#1a1a1a;border-top:1px solid #333;display:flex;padding-bottom:env(safe-area-inset-bottom,0px);flex-shrink:0}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px;gap:4px;cursor:pointer;border:none;background:none}
+.nb-i{font-size:18px;color:#555}
+.nb-l{font-size:9px;font-weight:700;letter-spacing:.5px;color:#555;text-transform:uppercase}
+.nb.on .nb-i,.nb.on .nb-l{color:#C9A84C}
+/* MAIN */
+#main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#FEFDF8}
+.scr{display:none;min-height:100%}
+.scr.on{display:block}
+/* DAYS */
+.dw{padding:14px;display:flex;flex-direction:column;gap:8px}
+.ch{background:#1a1a1a;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.ch-n{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ch-nn{font-size:18px;font-weight:800;color:#fff}
+.ch-city{font-size:19px;font-weight:800;color:#fff}
+.ch-d{font-size:11px;font-weight:600;margin-top:2px}
+.dc{background:#fff;border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.dc:active{transform:scale(.98)}
+.dc-top{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #f0ead4}
+.db{width:36px;height:36px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.db-j{font-size:7px;font-weight:700;color:#fff;letter-spacing:1px}
+.db-n{font-size:15px;font-weight:800;color:#fff;line-height:1}
+.di{flex:1;min-width:0}
+.di-d{font-size:13px;font-weight:700;color:#1a1a1a}
+.di-l{font-size:11px;color:#2A6B7C;font-weight:600;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dh{font-size:9px;padding:4px 8px;border-radius:20px;font-weight:700;white-space:nowrap;flex-shrink:0;color:#fff;text-align:center;max-width:100px;line-height:1.3}
+.dp{padding:8px 14px 12px;display:flex;gap:5px;flex-wrap:wrap}
+.pl{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:600}
+.t-tp{background:#EAF4F7;color:#2A6B7C}
+.t-ac{background:#FAF6EE;color:#7a5c0a}
+.t-me{background:#FDF0EE;color:#C8573F}
+.t-sh{background:#F2EEF8;color:#5B3A7E}
+.t-ht{background:#EEF5F0;color:#2E6B3E}
+.pm{font-size:10px;color:#aaa;padding:4px 8px}
+.tb{background:#C9A84C;color:#1a1a1a;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:5px}
+/* DETAIL */
+.dh2{padding:16px 16px 14px}
+.dhr{display:flex;align-items:center;gap:12px}
+.dbg{width:48px;height:48px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.4);flex-shrink:0}
+.dbg-j{font-size:8px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:1px}
+.dbg-n{font-size:20px;font-weight:800;color:#fff;line-height:1}
+.dd{flex:1;min-width:0}
+.dd-d{font-size:17px;font-weight:800;color:#fff}
+.dd-s{font-size:12px;color:rgba(255,255,255,.75);margin-top:2px}
+.dd-l{font-size:11px;font-weight:600;letter-spacing:1px;margin-top:3px}
+.dhp{font-size:10px;font-weight:700;padding:6px 10px;border-radius:20px;background:rgba(255,255,255,.2);color:#fff;text-align:center;flex-shrink:0;max-width:110px;line-height:1.3}
+/* TIMELINE */
+.tl{padding:14px;display:flex;flex-direction:column}
+.tr{display:flex;gap:10px}
+.tll{display:flex;flex-direction:column;align-items:center;width:14px;flex-shrink:0}
+.tld{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:14px}
+.tlln{width:2px;flex:1;min-height:10px}
+.tc{flex:1;border-radius:12px;padding:12px 12px 10px;margin-bottom:10px;position:relative}
+.tt{font-size:10px;font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.tti{font-size:14px;font-weight:700;color:#1a1a1a;line-height:1.3;margin-bottom:5px;padding-right:80px}
+.tb2{font-size:12px;color:#666;line-height:1.5}
+.tc2{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;max-width:88px;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.maps-btn{display:inline-flex;align-items:center;gap:4px;margin-top:7px;background:#EAF4F7;color:#2A6B7C;border:none;border-radius:20px;padding:5px 11px;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;-webkit-appearance:none}
+.info-btn{display:inline-flex;align-items:center;gap:4px;margin-top:7px;background:#5B3A7E;color:#fff;border:none;border-radius:20px;padding:5px 11px;font-size:11px;font-weight:700;cursor:pointer;-webkit-appearance:none}
+.info-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);align-items:flex-end;justify-content:center}
+.info-overlay.open{display:flex}
+.info-sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 36px;max-height:75vh;overflow-y:auto;width:100%;max-width:480px}
+.info-sheet-title{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:12px;padding-right:32px;line-height:1.4}
+.info-sheet-body{font-size:13px;color:#444;line-height:1.7;white-space:pre-wrap}
+.info-sheet-close{position:absolute;top:16px;right:16px;background:#f0f0f0;border:none;border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#666}
+.info-sheet-header{position:relative}
+.tp .tc{background:#EAF4F7}.tp .tld{background:#2A6B7C}.tp .tlln{background:rgba(42,107,124,.2)}.tp .tt{color:#2A6B7C}.tp .tc2{background:#2A6B7C;color:#fff}
+.ta .tc{background:#FAF6EE}.ta .tld{background:#C9A84C}.ta .tlln{background:rgba(201,168,76,.2)}.ta .tt{color:#7a5c0a}.ta .tc2{background:#C9A84C;color:#1a1a1a}
+.tm .tc{background:#FDF0EE}.tm .tld{background:#C8573F}.tm .tlln{background:rgba(200,87,63,.2)}.tm .tt{color:#C8573F}.tm .tc2{background:#C8573F;color:#fff}
+.th .tc{background:#EEF5F0}.th .tld{background:#2E6B3E}.th .tlln{background:rgba(46,107,62,.2)}.th .tt{color:#2E6B3E}.th .tc2{background:#2E6B3E;color:#fff}
+.ts .tc{background:#F2EEF8}.ts .tld{background:#5B3A7E}.ts .tlln{background:rgba(91,58,126,.2)}.ts .tt{color:#5B3A7E}.ts .tc2{background:#5B3A7E;color:#fff}
+.tipb{background:#FAF6EE;border-left:3px solid #C9A84C;border-radius:10px;padding:12px 14px;margin:4px 0 10px}
+.tipl{font-size:10px;font-weight:700;color:#C9A84C;letter-spacing:1px;margin-bottom:4px}
+.tipt{font-size:12px;color:#2C2C2C;line-height:1.5}
+.noteb{background:#1a1a1a;border-radius:10px;padding:12px 14px;margin-bottom:20px}
+.notel{font-size:10px;font-weight:700;color:#C9A84C;letter-spacing:1px;margin-bottom:3px}
+.notet{font-size:12px;color:#ccc;line-height:1.4}
+/* INFO */
+.iw{padding:14px}
+.st{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;padding:14px 0 8px;display:flex;align-items:center;gap:8px}
+.st::after{content:"";flex:1;height:1px;background:rgba(201,168,76,.2)}
+.vc{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:10px;border-left:4px solid #C9A84C}
+.vi{padding:13px 14px}
+.vt{font-size:10px;font-weight:700;color:#C9A84C;letter-spacing:1px;margin-bottom:4px}
+.vr{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:3px}
+.vd{font-size:11px;color:#666}
+.vo{font-size:10px;font-weight:700;color:#2E6B3E;margin-top:4px}
+.hl{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:12px}
+.hr2{padding:11px 14px;border-bottom:1px solid #f4f4f4;display:flex;gap:10px;align-items:flex-start}
+.hr2:last-child{border-bottom:none}
+.hn{font-size:13px;font-weight:700;color:#1a1a1a}
+.hs{font-size:10px;color:#C9A84C;font-weight:600;margin-top:1px}
+.ha{font-size:11px;color:#666;margin-top:1px}
+.href{font-size:10px;font-weight:700;color:#5B3A7E;white-space:nowrap}
+.rc{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:10px;border:1px solid rgba(201,168,76,.2)}
+.rh{padding:12px 14px 8px;display:flex;gap:10px;align-items:flex-start}
+.rd{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;color:#fff}
+.rn{font-size:14px;font-weight:700;color:#1a1a1a;line-height:1.3}
+.rdt{font-size:11px;color:#666;margin-top:2px;line-height:1.4}
+.rf{padding:8px 14px 10px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.trl{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:20px}
+.trr{padding:11px 14px;border-bottom:1px solid #f4f4f4;display:flex;justify-content:space-between;gap:10px}
+.trr:last-child{border-bottom:none}
+.trl2{font-size:12px;font-weight:700;color:#1a1a1a}
+.trv{font-size:11px;color:#666;text-align:right;max-width:55%;line-height:1.4}
+/* TIPS */
+.tw{padding:14px}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px}
+.mc{background:#fff;border-radius:12px;padding:12px 8px;text-align:center}
+.mcir{width:50px;height:50px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center}
+.mct{font-size:14px;font-weight:800;color:#fff}
+.mcc{font-size:10px;font-weight:700;color:#1a1a1a;margin-bottom:3px}
+.mch{font-size:9px;color:#666;line-height:1.4}
+.phl{display:flex;flex-direction:column;gap:6px;margin-bottom:4px}
+.phr{background:#fff;border-radius:10px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.phj{font-size:13px;font-weight:700;color:#1a1a1a}
+.phf{font-size:11px;color:#666;font-style:italic;text-align:right}
+.el{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.er{background:#fff;border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.edd{width:8px;height:8px;border-radius:50%;background:#C9A84C;flex-shrink:0;margin-top:4px}
+.ela{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:2px}
+.elv{font-size:11px;color:#666;line-height:1.4}
+::-webkit-scrollbar{width:0}
+</style>
+</head>
+<body>
+
+<div id="cover">
+  <div class="cv-tag">Carnet de Voyage Premium</div>
+  <div class="cv-big">SINGAPOUR</div>
+  <div class="cv-amp">&amp;</div>
+  <div class="cv-big">JAPON</div>
+  <div class="cv-line"></div>
+  <div class="cv-date">13 - 30 AOUT 2026</div>
+  <div class="cv-stats">
+    <div class="cv-stat"><div class="cv-sn">17</div><div class="cv-sl">Jours</div></div>
+    <div class="cv-stat"><div class="cv-sn">4</div><div class="cv-sl">Voyageurs</div></div>
+    <div class="cv-stat"><div class="cv-sn">6</div><div class="cv-sl">Villes</div></div>
+    <div class="cv-stat"><div class="cv-sn">5</div><div class="cv-sl">Hotels</div></div>
+  </div>
+  <div class="cv-route">
+    <span class="cv-hl">Paris</span><div class="cv-dot"></div>
+    <span>Singapour</span><div class="cv-dot"></div>
+    <span>Osaka</span><div class="cv-dot"></div>
+    <span>Kyoto</span><div class="cv-dot"></div>
+    <span class="cv-hl">Tokyo</span>
+  </div>
+  <button id="startBtn" onclick="goStart()">Commencer le voyage</button>
+</div>
+
+<div id="app">
+  <div id="topbar">
+    <button id="backBtn" onclick="goBack()">&#8592; Retour</button>
+    <button id="nextBtn" onclick="nextDay()">Suivant &#8594;</button>
+    <div style="flex:1;min-width:0">
+      <div id="topTitle">Itineraire</div>
+      <div id="topSub" style="font-size:10px;color:#C9A84C;letter-spacing:1px;font-weight:500">SINGAPOUR &amp; JAPON 2026</div>
+    </div>
+  </div>
+  <div class="prog"><div class="prog-fill" id="pf"></div></div>
+  <div id="main">
+    <div class="scr on" id="s-it"><div class="dw" id="dl"></div></div>
+    <div class="scr" id="s-dy"><div id="dd2"></div></div>
+    <div class="scr" id="s-in"><div class="iw" id="ic"></div></div>
+    <div class="scr" id="s-ti"><div class="tw" id="tc2"></div></div>
+  </div>
+  <div id="bnav">
+    <button class="nb on" id="n-it" onclick="showS('it')"><span class="nb-i">&#128197;</span><span class="nb-l">Jours</span></button>
+    <button class="nb" id="n-in" onclick="showS('in')"><span class="nb-i">&#9992;&#65039;</span><span class="nb-l">Infos</span></button>
+    <button class="nb" id="n-ti" onclick="showS('ti')"><span class="nb-i">&#128161;</span><span class="nb-l">Conseils</span></button>
+  </div>
+</div>
+
+<script>
+var INFO_DATA={
+  "Jewel Changi - Shiseido Forest Valley":{
+    title:"Jewel Changi - Shiseido Forest Valley",
+    body:"Dans Jewel depuis Hall Arrivees T1\n\nSpectacle lumiere et musique GRATUIT sur le Rain Vortex.\n14 aout = JEUDI -> spectacles a 20h00 et 21h00\n(Lun-Jeu : 2 shows  Ven-Dim : 3 shows)\n\nLes Supertrees et la cascade s illuminent de couleurs spectaculaires.\n\nMeilleur spot : niveaux 3-4 face a la cascade.\nArriver 10 min avant pour avoir une bonne place."
+  }
+};
+
+var DATA={"CHAPTERS":[{"id":"sg","num":1,"city":"SINGAPOUR","subtitle":"La cite-Etat futuriste","dates":"14 - 17 aout 2026","color":"#2A6B7C"},{"id":"osaka","num":2,"city":"OSAKA","subtitle":"La capitale gastronomique","dates":"18 - 20 aout 2026","color":"#C8573F"},{"id":"kyoto","num":3,"city":"KYOTO","subtitle":"Geishas - Temples - Bambouseraie","dates":"21 - 23 aout 2026","color":"#5B3A7E"},{"id":"tokyo","num":4,"city":"TOKYO","subtitle":"La ville qui ne dort jamais","dates":"24 - 28 aout 2026","color":"#1A1A1A"}],"DAYS":[{"id":1,"chap":"sg","dayNum":1,"date":"14 AOUT","label":"14 AOUT - ARRIVEE SINGAPOUR","location":"Changi - Jewel - Marina Bay","hotel":"Pan Pacific Orchid *****","events":[{"time":"17h55","title":"Arrivee Changi T1 - Formalites","body":"Immigration file etrangers. Bagages. Prevoir 45-60 min entre atterrissage et sortie.","type":"transport","cost":"---"},{"time":"19h30","title":"Jewel Changi - Shiseido Forest Valley","body":"Passerelle depuis Hall Arrivees niveau 1. Cascade interieure de 40m - record mondial !","type":"activity","cost":"GRATUIT"},{"time":"20h00","title":"Light and Music Showcase","body":"Vendredi : shows a 20h, 21h et 22h. Meilleur spot niveaux 3-4 face a la cascade.","type":"show","cost":"GRATUIT"},{"time":"20h45","title":"Diner a Jewel - Tim Ho Wan","body":"Tim Ho Wan dim sum B2, Nam Nam Noodle Bar, Food Court B2 environ 5-8 EUR/pers.","type":"meal","cost":"~10-17 EUR"},{"time":"21h30","title":"Grab vers Pan Pacific Orchid","body":"App GRAB - commander depuis zone dedide B1 de Jewel ou Hall Arrivees T1.","type":"transport","cost":"~20-33 EUR"},{"time":"22h15","title":"Check-in Pan Pacific Orchid","body":"10 Claymore Road. Nuit 1/4. Decalage France vers Singapour : +6h en ete.","type":"hotel","cost":"Reserve"}],"tip":"Decalage horaire +6h - eviter de dormir trop tot pour s adapter au fuseau horaire.","note":"Demain : Marina Bay Sands 57e etage, Gardens by the Bay, Garden Rhapsody"},{"id":2,"chap":"sg","dayNum":2,"date":"15 AOUT","label":"15 AOUT - MARINA BAY","location":"Ce La Vi - Gardens by the Bay - Supertrees","hotel":"Pan Pacific Orchid *****","events":[{"time":"09h00","title":"Petit-dejeuner - Killiney Kopitiam","body":"Lucky Plaza #01-10. Kaya toast + oeufs demi-cuits + kopi environ 3-4 EUR/pers.","type":"meal","cost":"~3-5 EUR"},{"time":"09h45","title":"Piscine Pan Pacific - 1h30","body":"Piscine free-form 22m. Aqua Bar en bord de piscine. Horaires 7h30-21h.","type":"activity","cost":"GRATUIT"},{"time":"11h40","title":"Merlion Park + Esplanade","body":"Statue du Merlion - photo incontournable avec MBS en arriere-plan.","type":"activity","cost":"GRATUIT"},{"time":"12h30","title":"CE LA VI SkyBar - Dejeuner 57e etage","body":"MBS Tower 3. Vue 360 sur la skyline. Asian tapas premium. Reserver sur sg.celavi.com !","type":"meal","cost":"~26 EUR + repas"},{"time":"14h45","title":"Gardens by the Bay - Cloud Forest + Flower Dome","body":"Cloud Forest : foret tropicale, cascade 35m, 7 niveaux. Flower Dome : record Guinness.","type":"activity","cost":"~27 EUR/adulte"},{"time":"17h15","title":"Supertree Grove - Balade gratuite","body":"Acces gratuit. OCBC Skyway optionnel 7 EUR. Revenir pour Garden Rhapsody a 19h45.","type":"activity","cost":"GRATUIT"},{"time":"18h30","title":"Diner Hawker - Food Court Gardens","body":"Satay, laksa, char kway teow. Ambiance hawker en plein air bord de mer.","type":"meal","cost":"~10-13 EUR"},{"time":"19h45","title":"Garden Rhapsody - Spectacle GRATUIT","body":"18 Supertrees illumines en rythme. Shows 19h45 et 20h45. Arriver 15 min avant !","type":"show","cost":"GRATUIT"}],"tip":"Reserver Ce La Vi exactement 1 mois avant (15 juillet) sur sg.celavi.com","note":"Demain : Little India, Chinatown, Tanjong Beach Club, Clarke Quay"},{"id":3,"chap":"sg","dayNum":3,"date":"16 AOUT","label":"16 AOUT - SENTOSA ET SOIREE","location":"Little India - Chinatown - Tanjong Beach","hotel":"Pan Pacific Orchid *****","events":[{"time":"09h00","title":"Petit-dejeuner Killiney Kopitiam","body":"Lucky Plaza, kaya toast + kopi environ 3-4 EUR/pers.","type":"meal","cost":"~3-5 EUR"},{"time":"11h15","title":"Sri Veeramakaliamman Temple - Little India","body":"141 Serangoon Rd. Temple hindou dravidien tres colore. Entree libre, chaussures a retirer.","type":"activity","cost":"GRATUIT"},{"time":"11h50","title":"Buddha Tooth Relic Temple - Chinatown","body":"288 South Bridge Road. Temple Tang Dynasty, dent sacree du Bouddha. Tenue correcte.","type":"activity","cost":"GRATUIT"},{"time":"13h30","title":"Tanjong Beach Club - Session Daybed 3h","body":"Piscine + plage sable blanc, ambiance DJ. Cocktails environ 11-14 EUR/verre. Reserver 1 mois avant !","type":"activity","cost":"Min spend ~150 EUR"},{"time":"19h30","title":"Croisiere Singapore River - 40 min","body":"Clarke Quay Jetty. Vue sur la skyline nocturne de Singapour.","type":"activity","cost":"~15-20 EUR"},{"time":"21h00","title":"Spectra - Spectacle MBS GRATUIT","body":"Jets d eau, lasers, mapping facade MBS. Chaque soir a 21h. Spot : Event Plaza.","type":"show","cost":"GRATUIT"},{"time":"21h20","title":"Clarke Quay - Bars et Street Food","body":"Bars, hawker stalls. Ambiance festive du samedi soir.","type":"meal","cost":"~15-25 EUR"}],"tip":"Reserver Tanjong Beach Club des le 16 juillet : tanjongbeachclub.com ou +65 9750 5323","note":"Demain : Check-out Pan Pacific vers Mondrian Duxton. Preparer les bagages ce soir !"},{"id":4,"chap":"sg","dayNum":4,"date":"17 AOUT","label":"17 AOUT - DUXTON HILL","location":"Maxwell - Mondrian - Depart imminent","hotel":"Mondrian Duxton *****","events":[{"time":"09h00","title":"Dernier matin Pan Pacific - Piscine + Buffet","body":"Buffet Mosella environ 35 EUR/pers. Profitez de la piscine une derniere fois. Check-out avant 12h.","type":"activity","cost":"~35 EUR"},{"time":"12h15","title":"Check-out Pan Pacific Orchid","body":"Late check-out 12h30 si possible. Deposer bagages en consigne Bell Desk gratuit.","type":"hotel","cost":"---"},{"time":"13h30","title":"Dejeuner - Maxwell Food Centre","body":"Hawker mythique ! Tian Tian Chicken Rice stall #01-10, Popiah, Fried Carrot Cake, Rojak.","type":"meal","cost":"~5-8 EUR"},{"time":"14h30","title":"Check-in Mondrian Singapore Duxton","body":"16A Duxton Hill. Design Art Deco reinvente. Agoda #644071843.","type":"hotel","cost":"Reserve"},{"time":"15h00","title":"Canyon Club Rooftop Pool - Infinity Pool","body":"Vue shophouses Duxton Hill + skyline CBD. Cocktails californiens. Happy Hour environ 8 SGD.","type":"activity","cost":"GRATUIT"},{"time":"18h20","title":"Diner leger - Bottega di Carna ou Maxwell","body":"Option A : restaurant Mondrian pastas fraiches. Option B : Maxwell environ 5-8 EUR. Manger leger !","type":"meal","cost":"~8-45 EUR"},{"time":"19h40","title":"PREPARATION DEPART - COUCHER AVANT 20H30","body":"Preparer bagages. Verifier boarding pass Scoot TR898. Grab commande pour 04h30. REVEIL 04H00.","type":"transport","cost":"---"}],"tip":"Grab depuis Mondrian pour 04h30 - commander la veille. Trajet aeroport environ 25-30 min.","note":"REVEIL 04H00 - Vol Scoot TR898 SIN vers Osaka KIX - Depart 06h55"},{"id":5,"chap":"osaka","dayNum":5,"date":"18 AOUT","label":"18 AOUT - OSAKA ARRIVEE","location":"KIX - Dotonbori - Premier repas japonais","hotel":"Candeo Hotel Osaka *****","events":[{"time":"04h00","title":"Reveil + Check-out Mondrian","body":"Lever immediat. Passeports + boarding pass Scoot. Express check-out. Grab a 04h30.","type":"transport","cost":"---"},{"time":"06h55","title":"Vol Scoot TR898 SIN vers KIX","body":"Duree 6h40. Telecharger NAVITIME + Google Maps Osaka offline. JR Pass a activer a KIX.","type":"transport","cost":"Reserve"},{"time":"14h35","title":"Arrivee KIX - Formalites + JR Pass","body":"File immigration 30-45 min en aout. Echanger voucher JR Pass au bureau JR Ticket Office.","type":"transport","cost":"JR Pass inclus"},{"time":"15h35","title":"Haruka Express KIX vers Osaka Station","body":"Inclus JR Pass ! Environ 50 min confortables avec espace bagages. Premier train japonais !","type":"transport","cost":"Inclus JR Pass"},{"time":"16h40","title":"Check-in Candeo Hotel Osaka The Tower","body":"Quartier Namba/Shinsaibashi. Rooftop Sky Bath + sauna. Agoda #644075711.","type":"hotel","cost":"Reserve"},{"time":"17h10","title":"Promenade Dotonbori - Premier apercu","body":"Canal + enseignes geantes illuminees. Panneau Kani Doraku crabe anime. Pont Ebisubashi.","type":"activity","cost":"GRATUIT"},{"time":"18h10","title":"Diner - Premier repas japonais !","body":"Takoyaki Wanaka environ 5 EUR/portion, okonomiyaki environ 10 EUR, ou ramen simple.","type":"meal","cost":"~10-15 EUR"},{"time":"19h10","title":"Sky Bath Rooftop Candeo Hotel","body":"Bains interieur + exterieur avec vue panoramique sur Osaka. Douche AVANT obligatoire.","type":"activity","cost":"GRATUIT"}],"tip":"Tatouages interdits dans les bains japonais. Bains separes homme/femme.","note":"Demain : Chateau d Osaka, Kuromon Market, Shinsaibashi, Dotonbori de nuit"},{"id":6,"chap":"osaka","dayNum":6,"date":"19 AOUT","label":"19 AOUT - OSAKA MUST DO","location":"Chateau - Kuromon - Dotonbori - Okonomiyaki","hotel":"Candeo Hotel Osaka *****","events":[{"time":"08h30","title":"Petit-dejeuner Konbini ou Kissaten","body":"7-Eleven/Lawson : onigiri + cafe chaud environ 4-6 EUR. Kissaten retro japonais environ 5-7 EUR.","type":"meal","cost":"~4-7 EUR"},{"time":"09h30","title":"Chateau d Osaka - Osaka-jo","body":"8 etages, reconstruit 1931. Musee samourai + armures. Panorama au sommet sur la ville.","type":"activity","cost":"~3.50 EUR"},{"time":"12h00","title":"Kuromon Ichiba - La cuisine d Osaka","body":"170 stands depuis 1902. Huitres grillees, wagyu brochette, takoyaki, tamagoyaki.","type":"meal","cost":"~20-30 EUR"},{"time":"13h30","title":"Dotonbori - Glico Man + Canal","body":"Glico Man depuis pont Ebisubashi. Croisiere Tombori River environ 800 yens. Don Quijote 24h.","type":"activity","cost":"GRATUIT"},{"time":"15h00","title":"Shinsaibashi + Amemura","body":"Galerie marchande 600m. Amemura : streetwear, vintage, friperies. Triangle Park.","type":"activity","cost":"Shopping libre"},{"time":"16h30","title":"Diner Okonomiyaki - Must d Osaka !","body":"Fukutaro (Namba, reference locale) ou Mizuno (Dotonbori, institution depuis 1945).","type":"meal","cost":"~12-15 EUR"},{"time":"18h00","title":"Dotonbori de nuit","body":"Enseignes neons + reflets dans le canal. Spots photo : ponts Ebisubashi et Tazaemon.","type":"activity","cost":"GRATUIT"}],"tip":"Kuromon Ichiba : manger en marchant (kuidaore = culture d Osaka). Ouvert 9h-18h.","note":"Demain : Hiroshima et Miyajima - depart 06h50 en Shinkansen. Reveil 05h30."},{"id":7,"chap":"osaka","dayNum":7,"date":"20 AOUT","label":"20 AOUT - HIROSHIMA ET MIYAJIMA","location":"Dome UNESCO - Paix - Torii flottant - Mont Misen","hotel":"Candeo Hotel Osaka *****","events":[{"time":"06h50","title":"Shinkansen Shin-Osaka vers Hiroshima","body":"Gare SHIN-OSAKA (pas Osaka !). Hikari environ 1h15. Arrivee 8h05. Inclus JR Pass.","type":"transport","cost":"Inclus JR Pass"},{"time":"08h30","title":"Dome de la Bombe Atomique - UNESCO","body":"Genbaku Dome. Tour exterieur, acces 24h/24. Moment de recueillement. 6 aout 1945.","type":"activity","cost":"GRATUIT"},{"time":"09h05","title":"Musee Memorial de la Paix","body":"Visite emotionnante environ 1h30. Reserver OBLIGATOIRE sur hiroshima-museum.jp en aout.","type":"activity","cost":"~1.10 EUR"},{"time":"11h50","title":"Ferry JR vers Ile de Miyajima","body":"Departs toutes les 15 min. Traversee 10 min avec vue sur le Torii depuis le bateau !","type":"transport","cost":"Inclus JR Pass"},{"time":"12h10","title":"Sanctuaire Itsukushima + Torii flottant","body":"Maree HAUTE a 14h33 (2.97m) - Torii flottant ! Galeries sur pilotis + cerfs sacres.","type":"activity","cost":"~8 EUR"},{"time":"13h00","title":"Dejeuner rue Omotesando","body":"Kaki (huitres grillees), anago meshi (anguille), momiji manju chauds.","type":"meal","cost":"~15-25 EUR"},{"time":"14h15","title":"Telepherique Mont Misen + Sommet 535m","body":"Vue panoramique mer interieure de Seto. DERNIER DEPART vers le bas : 16h30 !","type":"activity","cost":"~11 EUR"}],"tip":"IMPORTANT : maree haute a 14h33. Arriver a Miyajima AVANT 12h pour le Torii flottant !","note":"Retour Osaka le soir. Demain check-out Candeo vers Nara puis Kyoto."},{"id":8,"chap":"kyoto","dayNum":8,"date":"21 AOUT","label":"21 AOUT - NARA + TRANSIT KYOTO","location":"Cerfs sacres - Todai-ji - Maison japonaise","hotel":"AirBNB Minami Ku","events":[{"time":"09h00","title":"Check-out Candeo + Consigne bagages","body":"Garder sac a dos leger uniquement. Recuperer bagages vers 14h au retour. Bell Desk gratuit.","type":"hotel","cost":"GRATUIT"},{"time":"10h50","title":"Parc de Nara - Cerfs en liberte !","body":"Cerfs sacres EN LIBERTE depuis plus de 1300 ans. Shika senbei environ 200 yens. Attention aux sacs !","type":"activity","cost":"GRATUIT"},{"time":"11h15","title":"Todai-ji - Grand Bouddha UNESCO","body":"Plus grand batiment bois du monde. Bouddha 15m, 500 tonnes ! Trou du pilier = chance.","type":"activity","cost":"~3.50 EUR"},{"time":"12h35","title":"Dejeuner rapide a Nara","body":"Kakinoha-zushi (sushis feuille de kaki, unique a Nara). Nakatanidou : mochi battus main.","type":"meal","cost":"~15-20 EUR"},{"time":"14h35","title":"JR Osaka vers Kyoto + Taxi vers AirBNB","body":"JR Kyoto Line environ 15-20 min. Puis taxi Kyoto Station vers Minami Ward environ 20 min, 15-20 EUR.","type":"transport","cost":"JR + ~20 EUR taxi"},{"time":"15h35","title":"Installation AirBNB Maison Minami Ku","body":"25-4 Higashikujo Kitamatsunokicho, Minami Ward. Ref. HM3CBJJKNC. Code boite a cle.","type":"hotel","cost":"Reserve"}],"tip":"Maison traditionnelle machiya : tatamis, shoji, bain prive ofuro, jardin.","note":"Demain : Fushimi Inari a 7h, Arashiyama, Gion - quartier des geishas"},{"id":9,"chap":"kyoto","dayNum":9,"date":"22 AOUT","label":"22 AOUT - TEMPLES ET GEISHAS","location":"Fushimi Inari - Arashiyama - Gion","hotel":"AirBNB Minami Ku","events":[{"time":"07h05","title":"Fushimi Inari Taisha - Montee complete","body":"Des milliers de torii vermillon jusqu au sommet 233m. A 7h : lumiere doree, peu de touristes !","type":"activity","cost":"GRATUIT"},{"time":"09h35","title":"Brunch au pied du sanctuaire","body":"Inari sushi (tofu frit fourre de riz), yakitori, dango, matcha latte. Torisei recommande.","type":"meal","cost":"~8-12 EUR"},{"time":"11h05","title":"Bambouseraie de Sagano - Arashiyama","body":"Tunnel de bambous geants 15-20m. Lumiere filtree spectaculaire. Sentier environ 500m.","type":"activity","cost":"GRATUIT"},{"time":"11h35","title":"Tenryu-ji + Riviere Oi-gawa","body":"Temple zen UNESCO. Jardin Sogenchi. Pont Togetsu-kyo = photo incontournable.","type":"activity","cost":"~3 EUR"},{"time":"12h50","title":"Dejeuner Arashiyama","body":"Yudofu (tofu bouillon), Shigure-tei (terrasse vue riviere). Ou bento bord de riviere.","type":"meal","cost":"~15-20 EUR"},{"time":"14h35","title":"Gion + Hanamikoji-dori","body":"Rue pavee avec ochaya maisons de the. Shimbashi + Shirakawa : canaux, saules, lanternes.","type":"activity","cost":"GRATUIT"},{"time":"17h00","title":"Ceremonie du the + Maiko","body":"Experience maiko et ceremonie du the a Gion. Reserver via Klook environ 40-60 EUR/pers.","type":"activity","cost":"~40-60 EUR"},{"time":"19h00","title":"Kiyomizudera - Temple de nuit","body":"Illuminations speciales en ete. Vue sur Kyoto la nuit depuis la terrasse en bois.","type":"activity","cost":"~3 EUR"}],"tip":"Respecter les geishas et maikos : ne pas bloquer les passages ni les approcher.","note":"Demain : Kinkaku-ji tot le matin, Nijo-jo, Nishiki Market, Chemin des Philosophes, Diner Sumo"},{"id":10,"chap":"kyoto","dayNum":10,"date":"23 AOUT","label":"23 AOUT - PAVILLON D OR ET SUMO","location":"Kinkaku-ji - Nijo-jo - Chemin des Philosophes","hotel":"AirBNB Minami Ku","events":[{"time":"09h15","title":"Kinkaku-ji - Le Pavillon d or","body":"Recouvert de feuilles d or, reflet dans l etang Kyoko-chi. Construit 1397. Avant 10h !","type":"activity","cost":"~3 EUR"},{"time":"10h15","title":"Nijo-jo - Chateau du Shogun","body":"Residence Tokugawa, UNESCO. Planchers rossignol anti-ninja. Peintures tigres et grues.","type":"activity","cost":"~5 EUR"},{"time":"11h30","title":"Dejeuner - Nishiki Market","body":"130 stands, 400 ans. Tsukemono, yudofu, dango, matcha soft cream, tofu frais, mochi.","type":"meal","cost":"~10-15 EUR"},{"time":"13h00","title":"Chemin des Philosophes - 2 km","body":"Canal + cerisiers. Eikan-do vers Honen-in vers Ginkaku-ji. Cafes artisanaux sur le chemin.","type":"activity","cost":"GRATUIT"},{"time":"15h00","title":"Ginkaku-ji - Pavillon d Argent","body":"Temple zen XVe siecle. Jardin de mousse immacule. Kogetsudai : cone de sable = Mont Fuji.","type":"activity","cost":"~3 EUR"},{"time":"17h30","title":"Diner-spectacle Sumo","body":"Sumo Dining Kyoto. Chanko nabe + demonstration lutteurs + photos. Experience unique !","type":"meal","cost":"~80-120 EUR"}],"tip":"Reserver le diner Sumo plusieurs semaines avant : sumodining.com ou Viator.","note":"Demain : Shinkansen Kyoto vers Tokyo (2h10 a 320 km/h). Toji Temple le matin."},{"id":11,"chap":"tokyo","dayNum":11,"date":"24 AOUT","label":"24 AOUT - ARRIVEE TOKYO","location":"Shinkansen - Shinjuku - Omoide Yokocho","hotel":"Appartement Shinjuku","events":[{"time":"09h00","title":"Visite libre - Toji Temple","body":"Pagode a 5 etages (55m, la plus haute du Japon). A 5 min a pied de la maison AirBNB.","type":"activity","cost":"GRATUIT"},{"time":"11h00","title":"Taxi maison vers Gare de Kyoto","body":"Taxi environ 15-20 min. Kyoto Station : l une des plus grandes gares du Japon.","type":"transport","cost":"~15-20 EUR"},{"time":"11h30","title":"Achat billets Shinkansen + Ekiben","body":"Environ 14000 yens (78 EUR/pers). NON inclus JR Pass ! Siege cote droit A/B pour Mont Fuji.","type":"transport","cost":"~78 EUR/pers"},{"time":"12h15","title":"Shinkansen Kyoto vers Tokyo - Nozomi 2h10","body":"2h10 a 320 km/h ! Mont Fuji visible cote droit environ 50 min apres Kyoto. Manger l ekiben !","type":"transport","cost":"Billets achetes"},{"time":"15h05","title":"Check-in Appartement Shinjuku","body":"AirBNB Ref. HMMEQM5DS. 5 nuits a Tokyo ! Reperer konbinis + station metro.","type":"hotel","cost":"Reserve"},{"time":"16h05","title":"Vue gratuite - Tokyo Metropolitan Gov. Building","body":"45e etage GRATUIT. Panorama Shinjuku + Mont Fuji par beau temps. 5 min de l appart !","type":"activity","cost":"GRATUIT"},{"time":"17h35","title":"Premier diner - Omoide Yokocho","body":"Memory Lane : ruelles micro-bars yakitori fumants. Brochettes grillees + bieres japonaises.","type":"meal","cost":"~15-20 EUR"}],"tip":"Le Mont Fuji est visible cote droit du train (rangee A/B) environ 50 min apres Kyoto.","note":"Demain : Asakusa, Senso-ji, Tokyo Skytree 634m, Sumida River"},{"id":12,"chap":"tokyo","dayNum":12,"date":"25 AOUT","label":"25 AOUT - ASAKUSA ET SKYTREE","location":"Senso-ji - 634m - Sumida River","hotel":"Appartement Shinjuku","events":[{"time":"09h00","title":"Senso-ji - Temple fonde en 645","body":"Kaminarimon grande lanterne rouge + Nakamise-dori. O-mikuji fortune papier environ 100 yens.","type":"activity","cost":"GRATUIT"},{"time":"09h45","title":"Nakamise-dori + Street food","body":"Kagetsudo melon pan geant, ningyo-yaki. Souvenirs, yukatas, baguettes laquees.","type":"meal","cost":"~10-15 EUR"},{"time":"10h15","title":"Location Kimono - 3-4h","body":"Yae no Komichi, Wargo Asakusa, Furifu. Tenue + coiffure + accessoires.","type":"activity","cost":"~20-30 EUR"},{"time":"10h45","title":"Dejeuner - Daikokuya Tempura","body":"Institution depuis 1887. Tempura-don environ 15-20 EUR. Arriver avant le rush du midi.","type":"meal","cost":"~15-20 EUR"},{"time":"11h45","title":"Balade Sumida River + Asahi Beer Hall","body":"Vue Skytree depuis pont Azumabashi. Asahi Beer Hall flamme doree Philippe Starck 70m.","type":"activity","cost":"GRATUIT"},{"time":"12h30","title":"Tokyo Skytree - 634m !","body":"Tembo Deck 350m environ 20 EUR. Option Galleria 450m +10 EUR. Reserver en ligne obligatoire !","type":"activity","cost":"~20 EUR"},{"time":"14h30","title":"Mini croisiere Sumida River","body":"Suijo Bus Asakusa vers Hamarikyu. Vue ponts colores. Environ 40-60 min.","type":"activity","cost":"~12-20 EUR"}],"tip":"Reserver le Skytree en ligne a l avance : souvent epuise en plein ete.","note":"Demain : Harajuku, Meiji Shrine, Shibuya Crossing, Shibuya Sky rooftop"},{"id":13,"chap":"tokyo","dayNum":13,"date":"26 AOUT","label":"26 AOUT - HARAJUKU ET SHIBUYA","location":"Meiji Shrine - Kawaii - Scramble - Shibuya Sky","hotel":"Appartement Shinjuku","events":[{"time":"09h25","title":"Meiji Shrine - Foret en plein Tokyo","body":"70 ha, 365 especes d arbres. Torii cedre 12m. Rituel purification temizuya.","type":"activity","cost":"GRATUIT"},{"time":"10h25","title":"Yoyogi Park - Pique-nique ou balade","body":"Pique-nique, danse, musiciens de rue. Belle lumiere pour photos sous les arbres.","type":"activity","cost":"GRATUIT"},{"time":"10h55","title":"Takeshita Street - Culture Kawaii","body":"Mode harajuku, vintage, streetwear. Marion Crepes depuis 1977 : environ 6-8 EUR.","type":"activity","cost":"~6-8 EUR"},{"time":"12h00","title":"Dejeuner Omotesando","body":"Afuri Ramen yuzu leger, Gyukatsu Motomura katsu boeuf sur pierre chaude.","type":"meal","cost":"~12-18 EUR"},{"time":"13h30","title":"Shibuya Crossing - Carrefour du monde","body":"Jusqu a 3000 personnes simultanement. Statue Hachiko. Vue depuis Starbucks niveau 2.","type":"activity","cost":"GRATUIT"},{"time":"14h00","title":"Shibuya Sky - 46e etage","body":"Vue 360 : Shinjuku, Tokyo Tower, Fuji. Plateforme verre ouverte sur le ciel. Reserver !","type":"activity","cost":"~20 EUR"},{"time":"15h30","title":"Shibuya PARCO + Miyashita Park","body":"Pokemon Center Shibuya 6F, Nintendo Tokyo 6F, galeries d art.","type":"activity","cost":"Shopping libre"},{"time":"17h00","title":"Nonbei Yokocho + Soiree Shibuya","body":"Drunkard Alley : bars yakitori intimistes. Karaoke Big Echo, izakaya environ 20-30 EUR.","type":"meal","cost":"~20-30 EUR"}],"tip":"Reserver Shibuya Sky en ligne : souvent complet plusieurs jours a l avance en ete.","note":"Demain : Shinjuku Gyoen, Golden Gai, Omoide Yokocho, Kabukicho"},{"id":14,"chap":"tokyo","dayNum":14,"date":"27 AOUT","label":"27 AOUT - SHINJUKU ET GOLDEN GAI","location":"Gyoen - Yakitori - 300 micro-bars","hotel":"Appartement Shinjuku","events":[{"time":"Matin","title":"Shinjuku Gyoen - Parc Imperial","body":"500 especes, jardins francais + anglais + japonais. A 5 min de l appart. Fraicheur en aout.","type":"activity","cost":"~3 EUR"},{"time":"12h30","title":"Dejeuner Shinjuku","body":"Ichiran Ramen tonkotsu cabines individuelles environ 12 EUR, Fuunji tsukemen, Gyudon.","type":"meal","cost":"~8-15 EUR"},{"time":"13h45","title":"Vue Gratuite - TMG Building 45e etage","body":"Panorama Shinjuku + Mont Fuji. Deux tours nord/sud. A 5 min de l appartement !","type":"activity","cost":"GRATUIT"},{"time":"14h45","title":"Shopping Shinjuku","body":"Takashimaya Times Square, Bic Camera, Kinokuniya livres francais niveau 6, Don Quijote.","type":"activity","cost":"Shopping libre"},{"time":"16h30","title":"Godzilla Head + Kabukicho Tower","body":"Statue Godzilla sur le Gracery Hotel. Kabukicho Tower 2023 : cinema Toho, clubs.","type":"activity","cost":"GRATUIT"},{"time":"17h00","title":"Omoide Yokocho - Memory Lane","body":"Ruelles mythiques. Yakitori + bieres. Brochettes environ 2-4 EUR/piece. Ambiance retro.","type":"meal","cost":"~10-15 EUR"},{"time":"19h30","title":"Golden Gai - Experience unique de Tokyo","body":"300 micro-bars, 5-10 personnes max. Bars jazz, punk, manga. Entree 500-1000 yens.","type":"activity","cost":"~30-50 EUR"}],"tip":"Golden Gai : certains bars refusent les touristes - respecter l affichage en facade.","note":"Demain : Akihabara, teamLab Borderless, Odaiba, Rainbow Bridge illumine"},{"id":15,"chap":"tokyo","dayNum":15,"date":"28 AOUT","label":"28 AOUT - AKIHABARA ET TEAMLAB","location":"Gaming - Art numerique immersif - Odaiba","hotel":"Appartement Shinjuku","events":[{"time":"09h25","title":"Arcades SEGA et Taito - Akihabara","body":"Capitale mondiale des arcades. Taiko no Tatsujin, Dance Rush, UFO Catchers.","type":"activity","cost":"~10-20 EUR"},{"time":"10h25","title":"Super Potato + Animate + Mandarake","body":"Super Potato : retro gaming Super Famicom, GameBoy. Mandarake : manga rare, figurines.","type":"activity","cost":"Shopping libre"},{"time":"11h25","title":"Maid Cafe - Experience incontournable","body":"@home cafe 4F Akihabara UDX. Set boisson + gateau environ 15-20 EUR. Jeux interactifs.","type":"activity","cost":"~15-20 EUR"},{"time":"12h25","title":"Dejeuner Akihabara","body":"Menya Musashi tsukemen repute, Kura Sushi kaiten-zushi, Gyudon environ 5-7 EUR.","type":"meal","cost":"~10-15 EUR"},{"time":"14h00","title":"Unicorn Gundam 19.7m + DiverCity - Odaiba","body":"Statue RX-0 echelle 1:1. Transformations animees horaires. Gundam Base Tokyo 6F.","type":"activity","cost":"GRATUIT ext."},{"time":"14h45","title":"teamLab Borderless - A NE PAS RATER !","body":"Art numerique immersif. Forets de cristaux, ocean de fleurs, cascade de papillons. 2h min.","type":"show","cost":"~20 EUR"},{"time":"17h15","title":"Coucher de soleil - Odaiba Marine Park","body":"Vue Rainbow Bridge. Replique Statue de la Liberte. Bridge illumine arc-en-ciel la nuit.","type":"activity","cost":"GRATUIT"}],"tip":"Reserver teamLab Borderless OBLIGATOIREMENT en ligne sur teamlab.art avant le depart !","note":"Demain : Check-out - Derniers achats Don Quijote - Aeroport Haneda T3"},{"id":16,"chap":"tokyo","dayNum":16,"date":"29 AOUT","label":"29 AOUT - RETOUR VERS PARIS","location":"Haneda - Vietnam Airlines - Au revoir Japon","hotel":"Vol Vietnam Airlines","events":[{"time":"08h00","title":"Dernier petit-dejeuner Tokyo","body":"Konbini cafe + onigiri environ 5 EUR ou kissaten pour une derniere fois. Matcha latte.","type":"meal","cost":"~5-10 EUR"},{"time":"09h00","title":"Check-out Appartement Shinjuku","body":"Verifier toutes les pieces. Passeports + boarding pass Vietnam Airlines. Ref. HMMEQM5DS.","type":"hotel","cost":"---"},{"time":"10h30","title":"Derniers achats - Don Quijote Shinjuku","body":"Matcha KitKat, Calbee chips, instant ramen, sauces. Cosmetiques Biore UV, masques.","type":"activity","cost":"~20-50 EUR"},{"time":"11h30","title":"Shinjuku vers Haneda T3 Keikyu","body":"Yamanote vers Shinagawa environ 13 min + Keikyu Airport Express vers HND T3 environ 13 min. Total 30 min.","type":"transport","cost":"~3.50 EUR"},{"time":"12h30","title":"HND T3 - Enregistrement Vietnam Airlines","body":"Bagages soute max 23 kg. Securite 13h. Tax Free : recuperer TVA sur achats japonais.","type":"transport","cost":"---"},{"time":"13h45","title":"Dernier repas japonais a l aeroport","body":"Haneda Ichiba marche sushis, ramen, tonkatsu. Duty free : whisky japonais, matcha, Royce.","type":"meal","cost":"~15 EUR"},{"time":"16h35","title":"Decollage HND vers Hanoi vers Paris CDG","body":"Escale Hanoi environ 3h15. Arrivee Paris CDG T2C le 30 aout a 07h00. Ref. Trip.com 1306267919572900.","type":"transport","cost":"Reserve"}],"tip":"Tax Free japonais : recuperer la TVA tampon tax-free sur passeport avant embarquement.","note":"Arrivee Paris CDG Terminal 2C - 30 aout a 07h00 - RER B ou taxi vers Paris"}],"VOLS":[{"type":"ALLER","route":"Paris CDG vers Singapour SIN","airline":"Turkish Airlines TK1803","schedule":"13/08 - 22h10 vers 14/08 - 17h55"},{"type":"TRANSIT","route":"Singapour SIN vers Osaka KIX","airline":"Scoot TR898","schedule":"18/08 - 06h55 vers 18/08 - 14h35"},{"type":"RETOUR","route":"Tokyo HND vers Paris CDG","airline":"Vietnam Airlines VN50/VN17","schedule":"29/08 - 16h35 vers 30/08 - 07h00"}],"RESAS":[{"date":"15 AOUT","name":"Ce La Vi SkyBar","detail":"sg.celavi.com - Cover 38 SGD/pers (1 boisson incluse)","deadline":"Reserver des le 15 juillet","color":"#C9A84C"},{"date":"16 AOUT","name":"Tanjong Beach Club","detail":"tanjongbeachclub.com - Tel +65 9750 5323 - Session daybed 13h30-16h30","deadline":"Reserver des le 16 juillet","color":"#C8573F"},{"date":"20 AOUT","name":"Musee Memorial Hiroshima","detail":"hiroshima-museum.jp - 200 yens/pers - File plus de 1h sans reservation","deadline":"Reserver avant le depart","color":"#2A6B7C"},{"date":"23 AOUT","name":"Diner Spectacle Sumo Kyoto","detail":"sumodining.com ou Viator - Chanko nabe + demo lutteurs - environ 80-120 EUR","deadline":"Reserver plusieurs semaines avant","color":"#5B3A7E"},{"date":"28 AOUT","name":"teamLab Borderless","detail":"teamlab.art - environ 3200 yens (20 EUR) - Azabudai Hills, Minato","deadline":"Reserver avant le depart","color":"#1A1A1A"}],"PHRASES":[{"jp":"Arigato gozaimasu","fr":"Merci beaucoup"},{"jp":"Sumimasen","fr":"Excusez-moi / Pardon"},{"jp":"Ikura desu ka ?","fr":"Combien ca coute ?"},{"jp":"Doko desu ka ?","fr":"Ou est... ?"},{"jp":"Oishii !","fr":"C est delicieux !"},{"jp":"Kore wo kudasai","fr":"Je voudrais ceci"},{"jp":"Toire wa doko ?","fr":"Ou sont les toilettes ?"},{"jp":"Eigo hanasemasu ka ?","fr":"Parlez-vous anglais ?"}],"ESSENTIALS":[{"label":"Vetements legers","val":"Lin, coton, matieres respirantes. Aout = tres chaud et humide."},{"label":"Chaussures confortables","val":"15-20 km/jour ! Privilegier sans lacets pour les temples."},{"label":"Tenue pour temples","val":"Epaules et genoux couverts dans certains sanctuaires."},{"label":"Trousse pharmacie","val":"Anti-diarrhee, antihistaminiques, creme anti-moustiques DEET."},{"label":"Adaptateur electrique","val":"Singapour : Type G 3 broches. Japon : Type A 2 broches plates 100V."},{"label":"Consignes gare Japon","val":"Coin lockers disponibles dans toutes les grandes gares japonaises."}]};
+var CHS=DATA.CHAPTERS,DYS=DATA.DAYS,VLS=DATA.VOLS,RES=DATA.RESAS,PHS=DATA.PHRASES,ESS=DATA.ESSENTIALS;
+var curDay=null;
+
+function goStart(){
+  document.getElementById("cover").style.display="none";
+  var a=document.getElementById("app");
+  a.style.display="flex";
+  buildDays();
+  buildInfo();
+  buildTips();
+  updProg();
+}
+
+function e(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+function getTid(){var n=new Date(),s=new Date(2026,7,13),d=Math.floor((n-s)/86400000);return(d>=0&&d<17)?d+1:null}
+
+function updProg(){var t=getTid();document.getElementById("pf").style.width=(t?(t-1)/16*100:0)+"%"}
+
+function showS(k){
+  ["it","dy","in","ti"].forEach(function(x){
+    document.getElementById("s-"+x).classList.remove("on");
+    var nb=document.getElementById("n-"+x);
+    if(nb)nb.classList.remove("on");
+  });
+  document.getElementById("s-"+k).classList.add("on");
+  var nb2=document.getElementById("n-"+k);
+  if(nb2)nb2.classList.add("on");
+  var bb=document.getElementById("backBtn");
+  bb.style.display=k==="dy"?"block":"none";
+  var nb2=document.getElementById("nextBtn");
+  if(k==="dy"){
+    var idx=curDay?DYS.findIndex(function(d){return d.id===curDay.id}):-1;
+    nb2.style.display=(idx>=0 && idx<DYS.length-1)?"block":"none";
+  } else {
+    nb2.style.display="none";
+  }
+  var tt=document.getElementById("topTitle");
+  var ts=document.getElementById("topSub");
+  if(k==="dy"){tt.textContent=curDay?curDay.date:"";ts.textContent=curDay?curDay.location:""}
+  else{var nm={it:"Itineraire",in:"Vols et Reservations",ti:"Conseils"};tt.textContent=nm[k]||"";ts.textContent="SINGAPOUR & JAPON 2026"}
+  document.getElementById("main").scrollTop=0;
+}
+
+function goBack(){showS("it")}
+
+function nextDay(){
+  if(!curDay) return;
+  var idx = DYS.findIndex(function(d){return d.id===curDay.id});
+  if(idx < DYS.length-1){
+    openDay(DYS[idx+1].id);
+    document.getElementById("main").scrollTop=0;
+  }
+}
+
+function tclass(t){var m={transport:"tp",activity:"ta",meal:"tm",hotel:"th",show:"ts"};return m[t]||"ta"}
+function plbl(t){var m={transport:"Transport",activity:"Activite",meal:"Repas",show:"Spectacle",hotel:"Sejour"};return m[t]||"Info"}
+function pcls(t){var m={transport:"t-tp",activity:"t-ac",meal:"t-me",show:"t-sh",hotel:"t-ht"};return m[t]||"t-ac"}
+
+function buildDays(){
+  var h="",last=null,tid=getTid();
+  DYS.forEach(function(day){
+    if(day.chap!==last){
+      var ch=CHS.find(function(c){return c.id===day.chap});
+      h+='<div class="ch"><div class="ch-n" style="background:'+ch.color+'"><span class="ch-nn">'+ch.num+'</span></div>';
+      h+='<div><div class="ch-city">'+e(ch.city)+'</div><div class="ch-d" style="color:'+ch.color+'">'+e(ch.dates)+'</div></div></div>';
+      last=day.chap;
+    }
+    var ch=CHS.find(function(c){return c.id===day.chap});
+    var types=[],seen={};
+    day.events.slice(0,4).forEach(function(ev){if(!seen[ev.type]){seen[ev.type]=1;types.push(ev.type)}});
+    var pills=types.map(function(t){return'<span class="pl '+pcls(t)+'">'+plbl(t)+'</span>'}).join("");
+    var more=day.events.length-4;
+    var today=(day.id===tid)?'<span class="tb">AUJOURD HUI</span>':"";
+    h+='<div class="dc" onclick="openDay('+day.id+')">';
+    h+='<div class="dc-top"><div class="db" style="background:'+ch.color+'"><span class="db-j">JOUR</span><span class="db-n">'+day.dayNum+'</span></div>';
+    h+='<div class="di"><div class="di-d">'+e(day.date)+today+'</div><div class="di-l">'+e(day.location)+'</div></div>';
+    h+='<div class="dh" style="background:'+ch.color+'">'+e(day.hotel.replace(" *****",""))+'</div></div>';
+    h+='<div class="dp">'+pills+(more>0?'<span class="pm">+'+more+'</span>':"")+'</div></div>';
+  });
+  document.getElementById("dl").innerHTML=h;
+}
+
+function openDay(id){
+  curDay=DYS.find(function(d){return d.id===id});
+  if(!curDay)return;
+  var ch=CHS.find(function(c){return c.id===curDay.chap});
+  var parts=curDay.label.split(" - ");
+  var ds=parts[0]||"",ss=parts.slice(1).join(" - ")||"";
+  var evh="";
+  curDay.events.forEach(function(ev,i){
+    var last=(i===curDay.events.length-1);
+    var cost=(ev.cost&&ev.cost!=="---")?'<div class="tc2">'+e(ev.cost)+'</div>':"";
+    var mapsTypes=["activity","meal","show","hotel"];
+    var mapsHtml="";
+    if(mapsTypes.indexOf(ev.type)>=0){
+      var customUrls={
+        "Diner a Jewel - Tim Ho Wan":"https://maps.app.goo.gl/7ycwJdS36GQE8xQE8",
+        "Dejeuner - Maxwell Food Centre":"https://maps.app.goo.gl/mPwv77gRcohP5wjx5",
+        "Dejeuner rue Omotesando":"https://maps.app.goo.gl/eNTR27PygsHJ3Src6",
+        "Installation AirBNB Maison Minami Ku":"https://maps.app.goo.gl/hYMBbbdyEVPaZyJR9",
+        "Visite libre - Toji Temple":"https://maps.app.goo.gl/RncZJPrm7acEYb8B6",
+        "Vue gratuite - Tokyo Metropolitan Gov. Building":"https://maps.app.goo.gl/WJNHgnDbwYo5hsQG7",
+        "Premier diner - Omoide Yokocho":"https://maps.app.goo.gl/Rv13HbyakSSQTyVC9",
+        "Location Kimono - 3-4h":"https://maps.app.goo.gl/GCCehtL1aeQ95sXk6",
+        "Dejeuner - Daikokuya Tempura":"https://maps.app.goo.gl/AySfRPeef73YeukN8",
+        "Balade Sumida River + Asahi Beer Hall":"https://maps.app.goo.gl/cnyS9sLqocGgHp5ZA",
+        "Mini croisiere Sumida River":"https://maps.app.goo.gl/cnyS9sLqocGgHp5ZA",
+        "Unicorn Gundam 19.7m + DiverCity - Odaiba":"https://maps.app.goo.gl/XGcn9nucvAA1ResLA",
+        "Coucher de soleil - Odaiba Marine Park":"https://maps.app.goo.gl/zNAHuVx2RsSA6WRZ6",
+        "Check-in Appartement Shinjuku":"https://maps.app.goo.gl/8623PbCsR9rAy3KR7",
+        "Check-out Appartement Shinjuku":"https://maps.app.goo.gl/8623PbCsR9rAy3KR7",
+        "Derniers achats - Don Quijote Shinjuku":"https://maps.app.goo.gl/79S3ayXLeYaXTyQF7",
+        "Dernier repas japonais a l aeroport":"https://maps.app.goo.gl/YmcrND1GQj9z5vtk9"
+      };
+      var q=encodeURIComponent(ev.title.split(" - ")[0].split(" + ")[0]);
+      var url=customUrls[ev.title]||("https://www.google.com/maps/search/?api=1&query="+q);
+      mapsHtml='<a href="'+url+'" target="_blank" rel="noopener" class="maps-btn">&#128205; Maps</a>';
+    }
+    var infoBtn="";
+    if(INFO_DATA && INFO_DATA[ev.title]){
+      var safeKey=ev.title.replace(/'/g,"&#39;");
+      infoBtn='<button class="info-btn" onclick="openInfo(this)" data-key="'+safeKey+'">&#9432; Infos</button>';
+    }
+    evh+='<div class="tr '+tclass(ev.type)+'">';
+    evh+='<div class="tll"><div class="tld"></div>'+(last?"":'<div class="tlln"></div>')+'</div>';
+    evh+='<div class="tc">'+cost+'<div class="tt">'+e(ev.time)+'</div><div class="tti">'+e(ev.title)+'</div><div class="tb2">'+e(ev.body)+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+mapsHtml+infoBtn+'</div></div></div>';
+  });
+  var tip=curDay.tip?'<div class="tipb"><div class="tipl">BON A SAVOIR</div><div class="tipt">'+e(curDay.tip)+'</div></div>':"";
+  var note=curDay.note?'<div class="noteb"><div class="notel">DEMAIN</div><div class="notet">'+e(curDay.note)+'</div></div>':"";
+  document.getElementById("dd2").innerHTML=
+    '<div class="dh2" style="background:'+ch.color+'">'+
+    '<div class="dhr"><div class="dbg"><span class="dbg-j">JOUR</span><span class="dbg-n">'+curDay.dayNum+'</span></div>'+
+    '<div class="dd"><div class="dd-d">'+e(ds)+'</div><div class="dd-s">'+e(ss)+'</div><div class="dd-l" style="color:rgba(255,255,255,.8)">'+e(curDay.location)+'</div></div>'+
+    '<div class="dhp">'+e(curDay.hotel)+'</div></div></div>'+
+    '<div class="tl">'+evh+tip+note+'</div>';
+  showS("dy");
+}
+
+function buildInfo(){
+  var h='<div class="st">Vols</div>';
+  VLS.forEach(function(v){
+    h+='<div class="vc"><div class="vi"><div class="vt">'+e(v.type)+'</div><div class="vr">'+e(v.route)+'</div><div class="vd">'+e(v.airline)+'</div><div class="vd">'+e(v.schedule)+'</div><div class="vo">Confirme</div></div></div>';
+  });
+  h+='<div class="st">Hebergements</div><div class="hl">';
+  [
+   {dates:"14-17 AOUT",name:"Pan Pacific Orchid",stars:"*****",addr:"10 Claymore Road, Singapore",ref:"Agoda #644068555",maps:"https://maps.app.goo.gl/5L9JvhzS4qGuubJJ6"},
+   {dates:"17 AOUT",name:"Mondrian Singapore Duxton",stars:"*****",addr:"16A Duxton Hill, Singapore",ref:"Agoda #644071843",maps:"https://maps.app.goo.gl/HqdZk6LDCHH3qs9j8"},
+   {dates:"18-20 AOUT",name:"Candeo Hotel Osaka",stars:"*****",addr:"Namba, Osaka",ref:"Agoda #644075711",maps:"https://maps.app.goo.gl/RFbnU2z9esVAohFv6"},
+   {dates:"21-23 AOUT",name:"Maison Minami Ku",stars:"Machiya",addr:"Higashikujo, Kyoto",ref:"AirBnb #HM3CBJJKNC",maps:"https://maps.app.goo.gl/hYMBbbdyEVPaZyJR9"},
+   {dates:"24-28 AOUT",name:"Appartement Shinjuku",stars:"AirBnb",addr:"Shinjuku, Tokyo",ref:"AirBnb #HMMEQM5DS",maps:"https://maps.app.goo.gl/8623PbCsR9rAy3KR7"}
+  ].forEach(function(hh){
+    var mapsLink=hh.maps?'<a href="'+hh.maps+'" target="_blank" rel="noopener" class="maps-btn" style="margin-top:5px">&#128205; Maps</a>':"";
+    h+='<div class="hr2"><div style="flex:1;min-width:0"><div class="hn">'+e(hh.name)+'</div><div class="hs">'+e(hh.stars)+' - '+e(hh.dates)+'</div><div class="ha">'+e(hh.addr)+'</div>'+mapsLink+'</div><div class="href" style="text-align:right">'+e(hh.ref)+'</div></div>';
+  });
+  h+='</div><div class="st">Reservations essentielles</div>';
+  RES.forEach(function(r){
+    h+='<div class="rc"><div class="rh"><div class="rd" style="background:'+r.color+'">'+e(r.date)+'</div><div><div class="rn">'+e(r.name)+'</div><div class="rdt">'+e(r.detail)+'</div></div></div><div class="rf" style="color:'+r.color+';background:'+r.color+'20">'+e(r.deadline)+'</div></div>';
+  });
+  h+='<div class="st">Transports cles</div><div class="trl">';
+  [["EZ-Link Card Singapour","env. 10 SGD - carte MRT rechargeable"],
+   ["GRAB App","Uber local Singapour - telecharger avant le depart"],
+   ["JR Kansai-Hiroshima 5j.","env. 95 EUR/pers - activer le 18/08 a KIX"],
+   ["Suica / Pasmo (Japon)","Carte IC - metros, trains, konbinis"],
+   ["Shinkansen Kyoto-Tokyo","env. 78 EUR/pers - NON inclus JR Pass - siege cote droit"],
+   ["NAVITIME for Japan","Meilleure app transports japonais"]
+  ].forEach(function(t){
+    h+='<div class="trr"><div class="trl2">'+e(t[0])+'</div><div class="trv">'+e(t[1])+'</div></div>';
+  });
+  h+='</div>';
+  document.getElementById("ic").innerHTML=h;
+}
+
+function buildTips(){
+  var h='<div class="st">Meteo en aout</div><div class="mg">';
+  [{city:"SINGAPOUR",temp:"31C",hum:"Humidite 80-90%<br>Pluies courtes",color:"#2A6B7C"},
+   {city:"OSAKA/KYOTO",temp:"35C",hum:"Chaud et humide<br>SPF 50+ vital",color:"#C8573F"},
+   {city:"TOKYO",temp:"33C",hum:"Chaleur accablante<br>Ventil. portable",color:"#1A1A1A"}
+  ].forEach(function(m){
+    h+='<div class="mc"><div class="mcir" style="background:'+m.color+'"><span class="mct">'+m.temp+'</span></div><div class="mcc">'+m.city+'</div><div class="mch">'+m.hum+'</div></div>';
+  });
+  h+='</div><div class="st">Essentiels a emporter</div><div class="el">';
+  ESS.forEach(function(es){
+    h+='<div class="er"><div class="edd"></div><div><div class="ela">'+e(es.label)+'</div><div class="elv">'+e(es.val)+'</div></div></div>';
+  });
+  h+='</div><div class="st">Phrases utiles en japonais</div><div class="phl">';
+  PHS.forEach(function(p){
+    h+='<div class="phr"><span class="phj">'+e(p.jp)+'</span><span class="phf">'+e(p.fr)+'</span></div>';
+  });
+  h+='</div>';
+  document.getElementById("tc2").innerHTML=h;
+}
+
+// ── INFO POPUP ──────────────────────────────────────────
+function openInfo(btn) {
+  var key = btn.getAttribute("data-key");
+  var d = INFO_DATA[key];
+  if (!d) return;
+  document.getElementById("infoTitle").textContent = d.title;
+  document.getElementById("infoBody").textContent = d.body;
+  var ov = document.getElementById("infoOverlay");
+  ov.style.display = "flex";
+  ov.style.alignItems = "flex-end";
+  ov.style.justifyContent = "center";
+  document.getElementById("main").style.overflow = "hidden";
+}
+
+function closeInfoOverlay() {
+  document.getElementById("infoOverlay").style.display = "none";
+  document.getElementById("main").style.overflow = "";
+}
+</script>
+<div id="infoOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);align-items:flex-end;justify-content:center" onclick="if(event.target===this)closeInfoOverlay()">
+  <div style="background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 40px;max-height:75vh;overflow-y:auto;width:100%;max-width:480px;position:relative">
+    <div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:12px;padding-right:36px;line-height:1.4" id="infoTitle"></div>
+    <button onclick="closeInfoOverlay()" style="position:absolute;top:16px;right:16px;background:#f0f0f0;border:none;border-radius:50%;width:30px;height:30px;font-size:17px;cursor:pointer;color:#666;display:flex;align-items:center;justify-content:center">&#x2715;</button>
+    <div style="font-size:13px;color:#444;line-height:1.8;white-space:pre-wrap" id="infoBody"></div>
+  </div>
+</div>
+</body>
+</html>
