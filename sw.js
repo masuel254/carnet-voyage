@@ -1,4 +1,4 @@
-const CACHE = 'carnet-voyage-v5';
+const CACHE = 'carnet-voyage-v6';
 
 // Coeur de l'app : indispensable, mis en cache en bloc.
 const CORE = [
@@ -18,6 +18,29 @@ const IMAGES = [
   './pan-pacific-orchard-hotel.jpg',
   './mondrian-duxton-hotel.jpg',
   './candeo-osaka-hotel.jpg',
+  './merlion-park.jpg',
+  './cela-vi-skybar.jpg',
+  './gardens-by-the-bay.jpg',
+  './supertree-grove.jpg',
+  './satay-by-the-bay.jpg',
+  './garden-rhapsody.jpg',
+  './sri-temple.jpg',
+  './buddha-temple.jpg',
+  './tanjong-beach.jpg',
+  './river-cruise.jpg',
+  './spectra.jpg',
+  './clarke-quay.jpg',
+  './maxwell.jpg',
+  './canyon-club.jpg',
+  './dotonbori.jpg',
+  './premier-repas.jpg',
+  './skyspa-candeo.jpg',
+  './osaka-jo.jpg',
+  './gyumon.jpg',
+  './glico-man.jpg',
+  './shinsaibashi.jpg',
+  './okonomiyaki.jpg',
+  './dotonbori-nuit.jpg',
 ];
 
 self.addEventListener('install', e => {
