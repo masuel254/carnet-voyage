@@ -1,4 +1,4 @@
-const CACHE = 'carnet-voyage-v25';
+const CACHE = 'carnet-voyage-v26';
 
 const CORE = [
   './',
@@ -116,15 +116,40 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
+  const isImage = /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url.pathname);
+
+  if (isImage) {
+    // Images : cache-first (elles ne changent pas, rapide + hors-ligne)
+    e.respondWith(
+      caches.match(req).then(cached =>
+        cached || fetch(req).then(resp => {
+          if (resp && resp.status === 200 && resp.type === 'basic') {
+            const clone = resp.clone();
+            caches.open(CACHE).then(cache => cache.put(req, clone));
+          }
+          return resp;
+        }).catch(() => cached)
+      )
+    );
+    return;
+  }
+
+  // HTML / code / manifest / reste : NETWORK-FIRST
+  // => a chaque ouverture en ligne, on recupere la derniere version GitHub.
+  // Hors-ligne : on sert la derniere version mise en cache.
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(resp => {
-        if (!resp || resp.status !== 200 || resp.type !== 'basic') return resp;
+    fetch(req).then(resp => {
+      if (resp && resp.status === 200 && resp.type === 'basic') {
         const clone = resp.clone();
-        caches.open(CACHE).then(cache => cache.put(e.request, clone));
-        return resp;
-      }).catch(() => caches.match('./index.html'));
-    })
+        caches.open(CACHE).then(cache => cache.put(req, clone));
+      }
+      return resp;
+    }).catch(() =>
+      caches.match(req).then(cached => cached || caches.match('./index.html'))
+    )
   );
 });
