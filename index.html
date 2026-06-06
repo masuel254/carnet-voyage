@@ -518,7 +518,7 @@ var MAPS_CITY = "Madrid";
 // IMPORTANT : a chaque mise a jour, mettre la DATE+HEURE du moment ici
 // (format AAAA-MM-JJ-HHMM), idealement la meme que CACHE_VERSION dans sw.js.
 // Pas besoin de connaitre la version precedente : une date plus recente fait foi.
-var APP_VERSION = "2026-06-06-0942";
+var APP_VERSION = "2026-06-06-0951";
 var CURRENCIES = [];
 var TRICOUNT_URL = "https://tricount.com/tOXKlLsUIrPsznZnNC";
 var CONSEILS = ["Attention aux pickpockets dans le metro et les zones touristiques (Sol, Gran Via, Plaza Mayor).", "Diner tardif : en Espagne on mange souvent entre 21h et 22h30. Caler ses horaires sur le rythme local.", "Beaucoup de lieux ferment tard : la ville est tres vivante le soir et la nuit.", "Metro : dernier train a 1h30 du matin. Apres tes soirees dansantes, prevois un Uber ou un taxi pour rentrer.", "Eau du robinet potable et reputee a Madrid : inutile d acheter de l eau en bouteille.", "Sieste : certains petits commerces ferment l apres-midi (env. 14h-17h). Les grandes enseignes et le centre restent ouverts."];
@@ -1037,6 +1037,13 @@ function buildInfo(){
     h+=acc('&#127890; Essentiels a emporter', hEss, false);
   }
 
+  // --- Date de mise a jour du carnet ---
+  var majTxt=(typeof APP_VERSION!=="undefined")?APP_VERSION:"";
+  var mm=majTxt.match(/^(\d{4})-(\d{2})-(\d{2})-(\d{2})(\d{2})$/);
+  if(mm){ majTxt=mm[3]+"/"+mm[2]+"/"+mm[1]+" a "+mm[4]+"h"+mm[5]; }
+  h+='<div style="text-align:center;font-size:12px;color:#999;margin-top:18px;padding:12px;border-top:1px solid #eee">'
+    +'&#128260; Carnet mis a jour le<br><strong style="color:#B8923D">'+e(majTxt)+'</strong></div>';
+
   document.getElementById("ic").innerHTML=h;
 }
 
@@ -1127,13 +1134,6 @@ function buildTips(){
     h+='<div class="phr"><span class="phj">'+e(p.jp)+'</span><span class="phf">'+e(p.fr)+'</span></div>';
   });
   h+='</div>';
-
-  // --- Date de mise a jour du carnet ---
-  var majTxt=(typeof APP_VERSION!=="undefined")?APP_VERSION:"";
-  var mm=majTxt.match(/^(\d{4})-(\d{2})-(\d{2})-(\d{2})(\d{2})$/);
-  if(mm){ majTxt=mm[3]+"/"+mm[2]+"/"+mm[1]+" a "+mm[4]+"h"+mm[5]; }
-  h+='<div style="text-align:center;font-size:12px;color:#999;margin-top:18px;padding:12px;border-top:1px solid #eee">'
-    +'&#128260; Carnet mis a jour le<br><strong style="color:#B8923D">'+e(majTxt)+'</strong></div>';
 
   document.getElementById("tc2").innerHTML=h;
 }
