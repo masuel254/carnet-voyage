@@ -1739,7 +1739,7 @@ var INFO_DATA={
     image:"the-maiko.jpg",
     intro:"RESERVE via Klook (N° QNF094714). Ceremonie du the (chanoyu) au coeur de Higashiyama. Personnel parlant anglais, matcha, recette simple de matcha pour en profiter seul, patisseries traditionnelles japonaises (wagashi) pour accompagner le the.",
     horaires:[
-      "Heure confirmee apres la reservation (creneau 17h00 prevu)",
+      "Reservation confirmee a 17h00",
       "Arriver 5 minutes avant le debut",
       "Se tient au 5eme etage du batiment"
     ],
@@ -2964,10 +2964,11 @@ function openDay(id){
 
 // === RESERVATIONS DEJA EFFECTUEES (en dur, survivent aux push GitHub) ===
 // Le localStorage garde la priorite : si l'utilisateur modifie sur son tel, sa version gagne.
-var DEFAULT_RESA_DONE = { hiroshima:true, sumo:true };
+var DEFAULT_RESA_DONE = { hiroshima:true, sumo:true, maiko:true };
 var DEFAULT_RESA_DETAILS = {
   hiroshima:{ num:"GNE447785",    site:"Klook",        info:"Paye !" },
-  sumo:     { num:"GYG32L6K2V3M", site:"Getyourguide", info:"Paiement CN automatique 345,40 EUR le 20/08" }
+  sumo:     { num:"GYG32L6K2V3M", site:"Getyourguide", info:"Paiement CN automatique 345,40 EUR le 20/08" },
+  maiko:    { num:"QNF094714",    site:"Klook",        info:"Confirme a 17h00 - arriver 5 min avant - 5eme etage, Yamatocho 1" }
 };
 function loadChkState(){
   var s={}; try{ var v=localStorage.getItem("chkState"); if(v) s=JSON.parse(v); }catch(e){}
@@ -2995,7 +2996,7 @@ function buildInfo(){
     {id:"skytree",   name:"Tokyo Skytree",              date:"25 aout",  deadline:"Reserver des le 15 juillet",  color:"#C8573F"},
     {id:"hiroshima",name:"Musee Memorial Hiroshima",     date:"20 aout",  deadline:"Reserver avant le depart",    color:"#2A6B7C"},
     {id:"sumo",     name:"Diner Spectacle Sumo Kyoto",   date:"23 aout",  deadline:"Reserver plusieurs semaines avant", color:"#5B3A7E"},
-    {id:"maiko",    name:"Ceremonie du the + Maiko",      date:"22 aout",  deadline:"RESERVE - Klook N\u00b0 QNF094714", color:"#5B3A7E"},
+    {id:"maiko",    name:"Ceremonie du the + Maiko",      date:"22 aout",  deadline:"Reserver plusieurs semaines avant", color:"#5B3A7E"},
     {id:"teamlab",  name:"teamLab Planets (Toyosu)",      date:"28 aout",  deadline:"Reserver avant le depart (creneau horaire)", color:"#1a1a1a"},
   ];
   var doneCount = chkItems.filter(function(i){ return chkState[i.id]; }).length;
