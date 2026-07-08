@@ -366,6 +366,12 @@ button.train-btn[data-goto-train]{cursor:pointer;border:none}
 .chk-item:active{background:var(--paper-2)}
 .chk-box{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .25s var(--ease-spring)}
 .chk-box.done{background:#2E6B3E;border-color:#2E6B3E;transform:scale(1.05)}
+.chk-item.locked{cursor:default}
+.chk-item.locked:active{background:transparent}
+.chk-box.locked.done{background:#1f5330;border-color:#1f5330}
+.chk-lock{font-size:11px;opacity:.65;margin-left:3px}
+@keyframes chkShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.chk-item.chk-shake{animation:chkShake .5s var(--ease)}
 .chk-check{color:#fff;font-size:13px;font-weight:700;display:none}
 .chk-box.done .chk-check{display:block}
 .chk-info{flex:1;min-width:0}
@@ -2981,6 +2987,8 @@ function openDay(id){
 // === RESERVATIONS DEJA EFFECTUEES (en dur, survivent aux push GitHub) ===
 // Le localStorage garde la priorite : si l'utilisateur modifie sur son tel, sa version gagne.
 var DEFAULT_RESA_DONE = { hiroshima:true, sumo:true, maiko:true, teamlab:true, gardens:true };
+// Reservations deja payees/confirmees : verrouillees, impossible a decocher.
+var LOCKED_RESA = { hiroshima:true, sumo:true, maiko:true, teamlab:true, gardens:true };
 var DEFAULT_RESA_DETAILS = {
   hiroshima:{ num:"GNE447785",    site:"Klook",        info:"Paye !" },
   sumo:     { num:"GYG32L6K2V3M", site:"Getyourguide", info:"Paiement CN automatique 345,40 EUR le 20/08" },
@@ -3041,10 +3049,12 @@ function buildInfo(){
     var det = resaDetails[item.id] || {};
     var refText = (done && (det.num||det.site)) ? ((det.num ? '# '+det.num : '') + (det.num&&det.site ? ' - ' : '') + (det.site||'')) : '';
     var infoText = (done && det.info) ? det.info : '';
-    hChk += '<div class="chk-item" data-chkid="'+item.id+'">';
+    var locked = !!LOCKED_RESA[item.id];
+    if(locked) boxCls += ' locked';
+    hChk += '<div class="chk-item'+(locked?' locked':'')+'" data-chkid="'+item.id+'">';
     hChk += '<div class="'+boxCls+'"><span class="chk-check">&#10003;</span></div>';
     hChk += '<div class="chk-info" style="flex:1;min-width:0">';
-    hChk += '<div class="'+nameCls+'">'+e(item.name)+'</div>';
+    hChk += '<div class="'+nameCls+'">'+e(item.name)+(locked?' <span class="chk-lock" title="Reservation confirmee - verrouillee">&#128274;</span>':'')+'</div>';
     hChk += '<div class="chk-date">'+e(item.date)+'</div>';
     hChk += '<div class="chk-deadline" style="color:'+item.color+'" data-orig="'+e(item.deadline)+'">'+deadlineTxt+'</div>';
     if(refText) hChk += '<div class="chk-refnum">'+refText+'</div>';
@@ -3307,6 +3317,17 @@ function toggleChk(id){
     document.getElementById("resaInfoInput").value = (details[id] && details[id].info) || "";
     document.getElementById("resaModal").classList.add("open");
   } else {
+    // Reservation verrouillee (deja payee/confirmee) : on interdit le decochage.
+    if(LOCKED_RESA[id]){
+      var it = document.querySelector('[data-chkid="'+id+'"]');
+      if(it){
+        it.classList.remove("chk-shake");
+        void it.offsetWidth; // reflow pour relancer l'animation
+        it.classList.add("chk-shake");
+        setTimeout(function(){ it.classList.remove("chk-shake"); }, 500);
+      }
+      return;
+    }
     // Already done - uncheck directly
     state[id] = false;
     try{ localStorage.setItem("chkState", JSON.stringify(state)); }catch(e){}
