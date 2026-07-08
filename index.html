@@ -2999,11 +2999,15 @@ var DEFAULT_RESA_DETAILS = {
 function loadChkState(){
   var s={}; try{ var v=localStorage.getItem("chkState"); if(v) s=JSON.parse(v); }catch(e){}
   for(var k in DEFAULT_RESA_DONE){ if(!(k in s)) s[k]=DEFAULT_RESA_DONE[k]; }
+  // Les reservations verrouillees sont toujours faites, quel que soit le localStorage.
+  for(var lk in LOCKED_RESA){ if(LOCKED_RESA[lk]) s[lk]=true; }
   return s;
 }
 function loadResaDetails(){
   var d={}; try{ var v=localStorage.getItem("resaDetails"); if(v) d=JSON.parse(v); }catch(e){}
   for(var k in DEFAULT_RESA_DETAILS){ if(!d[k]) d[k]=DEFAULT_RESA_DETAILS[k]; }
+  // Pour les reservations verrouillees, on impose les details de reference.
+  for(var lk in LOCKED_RESA){ if(LOCKED_RESA[lk] && DEFAULT_RESA_DETAILS[lk]) d[lk]=DEFAULT_RESA_DETAILS[lk]; }
   return d;
 }
 
