@@ -1,4 +1,4 @@
-const CACHE = 'carnet-voyage-20260620-072927';
+const CACHE = 'carnet-voyage-20260708-085558';
 
 const CORE = [
   './',
