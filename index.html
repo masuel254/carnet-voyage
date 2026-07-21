@@ -2762,23 +2762,31 @@ function goStart(){
   updProg();
   setTimeout(fetchRates, 500);
   setTimeout(fetchWeather, 600);
-  // Restore last visited day
+  // Mode aujourd'hui : si le voyage est en cours, ouvrir directement sur le jour courant.
+  // Sinon (avant le depart ou apres), proposer un bandeau pour reprendre le dernier jour visite.
   try{
-    var lastId = localStorage.getItem("lastDayId");
-    if(lastId){
-      var lastDay = DYS.find(function(d){ return d.id===parseInt(lastId); });
-      if(lastDay){
-        // Show a small banner to resume
-        var banner = document.createElement("div");
-        banner.id = "resumeBanner";
-        banner.style.cssText = "position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:50px;font-size:12px;font-weight:600;z-index:500;box-shadow:0 4px 20px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap;border:1px solid #C9A84C";
-        banner.innerHTML = "&#9654; Reprendre le " + lastDay.date;
-        banner.onclick = function(){
-          openDay(parseInt(lastId));
-          banner.remove();
-        };
-        document.body.appendChild(banner);
-        setTimeout(function(){ if(banner.parentNode) banner.remove(); }, 5000);
+    var todayId = getTid();
+    if(todayId){
+      var todayDay = DYS.find(function(d){ return d.id===todayId; });
+      if(todayDay){
+        openDay(todayId);
+      }
+    } else {
+      var lastId = localStorage.getItem("lastDayId");
+      if(lastId){
+        var lastDay = DYS.find(function(d){ return d.id===parseInt(lastId); });
+        if(lastDay){
+          var banner = document.createElement("div");
+          banner.id = "resumeBanner";
+          banner.style.cssText = "position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:50px;font-size:12px;font-weight:600;z-index:500;box-shadow:0 4px 20px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap;border:1px solid #C9A84C";
+          banner.innerHTML = "&#9654; Reprendre le " + lastDay.date;
+          banner.onclick = function(){
+            openDay(parseInt(lastId));
+            banner.remove();
+          };
+          document.body.appendChild(banner);
+          setTimeout(function(){ if(banner.parentNode) banner.remove(); }, 5000);
+        }
       }
     }
   }catch(e){}
@@ -2839,7 +2847,40 @@ function goStart(){
 
 function e(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 
-function getTid(){var n=new Date(),s=new Date(2026,7,13),d=Math.floor((n-s)/86400000);return(d>=0&&d<17)?d+1:null}
+function getTid(){var n=new Date(),s=new Date(2026,7,14),d=Math.floor((n-s)/86400000);return(d>=0&&d<16)?d+1:null}
+
+// === NOTES LIBRES PAR JOUR (persistantes) ===
+function loadDayNote(id){
+  try{ var v=localStorage.getItem("dayNotes"); if(v){ var o=JSON.parse(v); return o[id]||""; } }catch(e){}
+  return "";
+}
+function saveDayNote(id, text){
+  var o={};
+  try{ var v=localStorage.getItem("dayNotes"); if(v) o=JSON.parse(v); }catch(e){}
+  if(text && text.trim()!==""){ o[id]=text; } else { delete o[id]; }
+  try{ localStorage.setItem("dayNotes", JSON.stringify(o)); return true; }catch(e){ return false; }
+}
+function bindDayNote(){
+  var ta=document.getElementById("dayNote");
+  if(!ta) return;
+  var status=document.getElementById("dayNoteStatus");
+  var timer=null;
+  ta.addEventListener("input", function(){
+    if(status) status.textContent="";
+    if(timer) clearTimeout(timer);
+    var id=parseInt(ta.getAttribute("data-dayid"));
+    var val=ta.value;
+    timer=setTimeout(function(){
+      var ok=saveDayNote(id, val);
+      if(status) status.textContent = ok ? "Enregistre" : "";
+      if(status && ok){ setTimeout(function(){ if(status) status.textContent=""; }, 1500); }
+    }, 500);
+  });
+  ta.addEventListener("blur", function(){
+    var id=parseInt(ta.getAttribute("data-dayid"));
+    saveDayNote(id, ta.value);
+  });
+}
 
 function updProg(){var t=getTid();document.getElementById("pf").style.width=(t?(t-1)/16*100:0)+"%"}
 
@@ -3087,6 +3128,13 @@ function openDay(id){
   });
   var tip=curDay.tip?'<div class="tipb"><div class="tipl">BON A SAVOIR</div><div class="tipt">'+e(curDay.tip)+'</div></div>':"";
   var note=curDay.note?'<div class="noteb"><div class="notel">DEMAIN</div><div class="notet">'+e(curDay.note)+'</div></div>':"";
+  var savedNote = loadDayNote(curDay.id);
+  var perso='<div style="background:#fff;border:1px solid #ececec;border-radius:14px;padding:12px 14px;margin-top:14px;box-shadow:0 2px 8px rgba(0,0,0,.05)">'+
+    '<div style="font-size:10px;font-weight:700;color:#C9A84C;letter-spacing:1.5px;margin-bottom:8px">MES NOTES</div>'+
+    '<textarea id="dayNote" data-dayid="'+curDay.id+'" placeholder="Notez ici : resto conseille, code wifi, quai de gare..." '+
+    'style="width:100%;box-sizing:border-box;min-height:70px;border:1px solid #eee;border-radius:10px;padding:10px;font-size:13px;font-family:inherit;color:#333;resize:vertical;outline:none;background:#fcfcfc">'+e(savedNote)+'</textarea>'+
+    '<div id="dayNoteStatus" style="font-size:10px;color:#BBB;margin-top:5px;min-height:12px"></div>'+
+    '</div>';
   document.getElementById("dd2").innerHTML=
     '<div class="dh2" style="background:'+ch.color+'">'+
     '<div class="dhr" style="position:relative"><div class="dbg"><span class="dbg-j">JOUR</span><span class="dbg-n">'+curDay.dayNum+'</span></div>'+
@@ -3097,7 +3145,8 @@ function openDay(id){
     '</div>'+
     '</div>'+
     '</div>'+
-    '<div class="tl">'+evh+tip+note+'</div>';
+    '<div class="tl">'+evh+tip+note+perso+'</div>';
+  bindDayNote();
   showS("dy");
   var idx2=DYS.findIndex(function(d){return d.id===curDay.id});
   var pb=document.getElementById("prevBtn");
@@ -3884,14 +3933,40 @@ function fetchWeather(){
       .then(function(d){
         results[idx] = {city:city, data:d};
         done++;
-        if(done === WEATHER_CITIES.length) renderWeather(results);
+        if(done === WEATHER_CITIES.length) finishWeather(results);
       })
       .catch(function(){
         results[idx] = {city:city, data:null};
         done++;
-        if(done === WEATHER_CITIES.length) renderWeather(results);
+        if(done === WEATHER_CITIES.length) finishWeather(results);
       });
   });
+}
+
+// Traite les resultats meteo : cache si OK, sinon reutilise la derniere prevision reelle.
+function finishWeather(results){
+  var anyData = results.some(function(r){ return r && r.data && r.data.daily; });
+  if(anyData){
+    // Au moins une ville a repondu : on met en cache et on affiche en direct
+    try{
+      var payload = results.map(function(r){ return { name:r.city.name, data:(r.data&&r.data.daily)?r.data:null }; });
+      localStorage.setItem("lastWeather", JSON.stringify({ results:payload, ts:Date.now() }));
+    }catch(e){}
+    renderWeather(results, null);
+    return;
+  }
+  // Tout est hors ligne : tenter la derniere prevision reelle mise en cache
+  var cached=null;
+  try{ var v=localStorage.getItem("lastWeather"); if(v) cached=JSON.parse(v); }catch(e){}
+  if(cached && cached.results){
+    var merged = WEATHER_CITIES.map(function(city){
+      var found = cached.results.find(function(c){ return c.name===city.name; });
+      return { city:city, data:(found?found.data:null) };
+    });
+    renderWeather(merged, cached.ts);
+  } else {
+    renderWeather(results, null);
+  }
 }
 
 function weatherEmoji(code){
@@ -3908,11 +3983,17 @@ function weatherEmoji(code){
   return "&#9729;";
 }
 
-function renderWeather(results){
+function renderWeather(results, offlineTs){
   var box = document.getElementById("weatherBox");
   if(!box) return;
   var days = ["Aujourd hui","Demain"];
   var html = "";
+  if(offlineTs){
+    var wd = new Date(offlineTs);
+    var whh = wd.getHours().toString().padStart(2,"0");
+    var wmm = wd.getMinutes().toString().padStart(2,"0");
+    html += '<div style="font-size:11px;color:#AAA;margin-bottom:8px">Derniere prevision du '+wd.toLocaleDateString("fr-FR")+' a '+whh+'h'+wmm+' (hors ligne)</div>';
+  }
   results.forEach(function(r){
     html += '<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">';
     html += '<div style="background:'+r.city.color+';padding:10px 14px">';
@@ -4416,6 +4497,30 @@ function addToCalendar(id) {
 }
 
 
+// Affiche les taux (SGD/JPY) et le libelle d'info. offlineTs : timestamp du dernier fetch reel si hors ligne, sinon null.
+function renderRates(rates, offlineTs){
+  var sgd = rates.SGD ? rates.SGD.toFixed(2) : "--";
+  var jpy = rates.JPY ? Math.round(rates.JPY) : "--";
+  var el_sgd = document.getElementById("sgdRate");
+  var el_jpy = document.getElementById("jpyRate");
+  var el_info = document.getElementById("rateInfo");
+  if(el_sgd) el_sgd.textContent = sgd;
+  if(el_jpy) el_jpy.textContent = jpy;
+  if(el_info){
+    if(offlineTs){
+      var od = new Date(offlineTs);
+      var ohh = od.getHours().toString().padStart(2,"0");
+      var omm = od.getMinutes().toString().padStart(2,"0");
+      el_info.textContent = "Dernier taux du " + od.toLocaleDateString("fr-FR") + " a " + ohh + "h" + omm + " (hors ligne)";
+    } else {
+      var now = new Date();
+      var hh = now.getHours().toString().padStart(2,"0");
+      var mm = now.getMinutes().toString().padStart(2,"0");
+      el_info.textContent = "Taux mis a jour le " + now.toLocaleDateString("fr-FR") + " a " + hh + "h" + mm + " (source : Frankfurter / BCE)";
+    }
+  }
+}
+
 function fetchRates() {
   fetch("https://api.frankfurter.app/latest?from=EUR&to=SGD,JPY")
     .then(function(r){ return r.json(); })
@@ -4423,28 +4528,27 @@ function fetchRates() {
       if(d && d.rates){
         cachedRates = d.rates;
         calcChange();
-        var sgd = d.rates.SGD ? d.rates.SGD.toFixed(2) : "--";
-        var jpy = d.rates.JPY ? Math.round(d.rates.JPY) : "--";
-        var el_sgd = document.getElementById("sgdRate");
-        var el_jpy = document.getElementById("jpyRate");
-        var el_info = document.getElementById("rateInfo");
-        if(el_sgd) el_sgd.textContent = sgd;
-        if(el_jpy) el_jpy.textContent = jpy;
-        if(el_info){
-          var now = new Date();
-          var hh = now.getHours().toString().padStart(2,"0");
-          var mm = now.getMinutes().toString().padStart(2,"0");
-          el_info.textContent = "Taux mis a jour le " + now.toLocaleDateString("fr-FR") + " a " + hh + "h" + mm + " (source : Frankfurter / BCE)";
-        }
+        renderRates(d.rates, null);
+        // Cache du dernier taux reel pour usage hors ligne ulterieur
+        try{ localStorage.setItem("lastRates", JSON.stringify({ rates:d.rates, ts:Date.now() })); }catch(e){}
       }
     })
     .catch(function(){
-      var el_info = document.getElementById("rateInfo");
-      if(el_info) el_info.textContent = "Taux indicatifs (hors ligne) : 1 EUR ~ 1.46 SGD / 1 EUR ~ 162 JPY";
-      var el_sgd = document.getElementById("sgdRate");
-      var el_jpy = document.getElementById("jpyRate");
-      if(el_sgd) el_sgd.textContent = "~1.46";
-      if(el_jpy) el_jpy.textContent = "~162";
+      // Hors ligne : reutiliser le dernier taux reel capture s'il existe
+      var cached=null;
+      try{ var v=localStorage.getItem("lastRates"); if(v) cached=JSON.parse(v); }catch(e){}
+      if(cached && cached.rates){
+        cachedRates = cached.rates;
+        calcChange();
+        renderRates(cached.rates, cached.ts);
+      } else {
+        var el_info = document.getElementById("rateInfo");
+        if(el_info) el_info.textContent = "Taux indicatifs (hors ligne) : 1 EUR ~ 1.46 SGD / 1 EUR ~ 162 JPY";
+        var el_sgd = document.getElementById("sgdRate");
+        var el_jpy = document.getElementById("jpyRate");
+        if(el_sgd) el_sgd.textContent = "~1.46";
+        if(el_jpy) el_jpy.textContent = "~162";
+      }
     });
 }
 </script>
