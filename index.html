@@ -2749,7 +2749,7 @@ var CHS=DATA.CHAPTERS,DYS=DATA.DAYS,VLS=DATA.VOLS,TRN=DATA.TRAINS||[],RES=DATA.R
 var curDay=null;
 
 function updateCountdown(){
-  var depart = new Date(2026, 7, 13, 9, 0, 0); // 13 août 2026 09h00
+  var depart = new Date(2026, 7, 13, 8, 30, 0); // 13 août 2026 08h30 (depart chez Thomas)
   var now = new Date();
   var diff = depart - now;
   if(diff <= 0){
