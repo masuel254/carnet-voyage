@@ -235,7 +235,7 @@ body{
 .tc2{font-family:-apple-system,sans-serif;position:absolute;top:11px;right:11px;font-size:10px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap;max-width:88px;overflow:hidden;text-overflow:ellipsis;text-align:center}
 
 /* boutons d'action (Maps, Uber, etc.) — police sans + ressort */
-.maps-btn,.info-btn,.share-btn,.walk-btn,.uber-btn,.grab-btn,.boat-btn,.train-btn,.plane-btn,.cal-btn{
+.maps-btn,.info-btn,.share-btn,.walk-btn,.uber-btn,.grab-btn,.boat-btn,.train-btn,.plane-btn,.cal-btn,.car-btn,.nav-btn{
   font-family:-apple-system,sans-serif;display:inline-flex;align-items:center;gap:5px;margin-top:9px;
   border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer;
   text-decoration:none;-webkit-appearance:none;transition:transform .15s var(--ease-spring),filter .15s;
@@ -247,6 +247,8 @@ body{
 .walk-btn{background:var(--gold-tint);color:var(--gold-deep);cursor:default}
 .uber-btn{background:var(--ink);color:#fff}
 .grab-btn{background:#00B14F;color:#fff}
+.car-btn{background:var(--ink);color:#fff;cursor:default}
+.nav-btn{background:#3A7BD5;color:#fff;cursor:default}
 .boat-btn{background:#E7F0F2;color:var(--c-sg);cursor:default}
 .train-btn{background:#E7F0F2;color:var(--c-sg);cursor:default}
 button.train-btn[data-goto-train]{cursor:pointer;border:none}
@@ -3148,9 +3150,17 @@ function openDay(id){
     if(typeof GRAB_EVENTS!=="undefined" && GRAB_EVENTS[ev.title]){
       grabBtn='<a href="'+GRAB_EVENTS[ev.title]+'" class="grab-btn">&#128663; Grab</a>';
     }
+    var carBtn="";
+    if(typeof CAR_EVENTS!=="undefined" && CAR_EVENTS[ev.title]){
+      carBtn='<span class="car-btn">&#128663; En voiture</span>';
+    }
+    var navBtn="";
+    if(typeof NAV_EVENTS!=="undefined" && NAV_EVENTS[ev.title]){
+      navBtn='<span class="nav-btn">&#128652; Navette</span>';
+    }
     evh+='<div class="tr '+tclass(ev.type)+'" id="ev-'+curDay.id+'-'+i+'">';
     evh+='<div class="tll"><div class="tld"></div>'+(last?"":'<div class="tlln"></div>')+'</div>';
-    evh+='<div class="tc">'+cost+'<div class="tt">'+e(ev.time)+'</div><div class="tti">'+e(ev.title)+'</div><div class="tb2">'+e(ev.body)+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+mapsHtml+planeBtn+walkBtn+trainBtn+boatBtn+uberBtn+grabBtn+infoBtn+calBtn+'</div></div></div>';
+    evh+='<div class="tc">'+cost+'<div class="tt">'+e(ev.time)+'</div><div class="tti">'+e(ev.title)+'</div><div class="tb2">'+e(ev.body)+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+mapsHtml+planeBtn+walkBtn+trainBtn+boatBtn+uberBtn+grabBtn+carBtn+navBtn+infoBtn+calBtn+'</div></div></div>';
   });
   var tip=curDay.tip?'<div class="tipb"><div class="tipl">BON A SAVOIR</div><div class="tipt">'+e(curDay.tip)+'</div></div>':"";
   var note=curDay.note?'<div class="noteb"><div class="notel">DEMAIN</div><div class="notet">'+e(curDay.note)+'</div></div>':"";
@@ -4280,6 +4290,13 @@ var UBER_EVENTS = {
   "Ferry JR vers Ile de Miyajima": "uber://",
 };
 
+var CAR_EVENTS = {
+  "Depart chez Thomas": true,
+  "Depart vers parking Roissy": true
+};
+var NAV_EVENTS = {
+  "Depart navette Terminal 1 CDG": true
+};
 var GRAB_EVENTS = {
   "Grab vers Pan Pacific Orchard": "grab://open",
   "Croisiere Singapore River - 40 min": "grab://open",
