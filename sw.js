@@ -1,4 +1,4 @@
-const CACHE = 'carnet-voyage-20260726-160000';
+const CACHE = 'carnet-voyage-20260730-213000';
 
 const CORE = [
   './',
@@ -8,6 +8,10 @@ const CORE = [
 ];
 
 const IMAGES = [
+  './city-singapour.jpg',
+  './city-osaka.jpg',
+  './city-kyoto.jpg',
+  './city-tokyo.jpg',
   './akihabara-arcades.jpg',
   './arashiyama-lunch.jpg',
   './baguettes.jpg',
