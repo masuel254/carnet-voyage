@@ -260,18 +260,20 @@ body{
 .tc2{font-family:-apple-system,sans-serif;position:absolute;top:11px;right:11px;font-size:10px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap;max-width:88px;overflow:hidden;text-overflow:ellipsis;text-align:center}
 
 /* boutons d'action (Maps, Uber, etc.) — police sans + ressort */
-.maps-btn,.info-btn,.share-btn,.walk-btn,.uber-btn,.grab-btn,.boat-btn,.train-btn,.plane-btn,.cal-btn,.car-btn,.nav-btn{
+.maps-btn,.info-btn,.share-btn,.walk-btn,.uber-btn,.grab-btn,.copy-btn,.boat-btn,.train-btn,.plane-btn,.cal-btn,.car-btn,.nav-btn{
   font-family:-apple-system,sans-serif;display:inline-flex;align-items:center;gap:5px;margin-top:9px;
   border:none;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer;
   text-decoration:none;-webkit-appearance:none;transition:transform .15s var(--ease-spring),filter .15s;
 }
-.maps-btn:active,.info-btn:active,.share-btn:active,.uber-btn:active,.grab-btn:active,.plane-btn:active,.cal-btn:active{transform:scale(.94)}
+.maps-btn:active,.info-btn:active,.share-btn:active,.uber-btn:active,.grab-btn:active,.copy-btn:active,.plane-btn:active,.cal-btn:active{transform:scale(.94)}
 .maps-btn{background:#E7F0F2;color:var(--c-sg)}
 .info-btn{background:linear-gradient(180deg,#6B4894,var(--c-kyoto));color:#fff}
 .share-btn{background:#E7F0F2;color:var(--c-sg)}
 .walk-btn{background:var(--gold-tint);color:var(--gold-deep);cursor:default}
 .uber-btn{background:var(--ink);color:#fff}
 .grab-btn{background:#00B14F;color:#fff}
+.copy-btn{background:#D6F0E0;color:#00713A}
+.copy-btn.copied{background:#00B14F;color:#fff}
 .car-btn{background:var(--ink);color:#fff;cursor:default}
 .nav-btn{background:#3A7BD5;color:#fff;cursor:default}
 .boat-btn{background:#E7F0F2;color:var(--c-sg);cursor:default}
@@ -3295,6 +3297,11 @@ function openDay(id){
     if(typeof GRAB_EVENTS!=="undefined" && GRAB_EVENTS[ev.title]){
       grabBtn='<a href="'+GRAB_EVENTS[ev.title]+'" class="grab-btn">&#128663; Grab</a>';
     }
+    var copyBtn="";
+    if(typeof GRABDEST_EVENTS!=="undefined" && GRABDEST_EVENTS[ev.title]){
+      var addr=GRABDEST_EVENTS[ev.title];
+      copyBtn='<button class="copy-btn" onclick="copyDest(this)" data-addr="'+addr.replace(/"/g,"&quot;").replace(/'/g,"&#39;")+'">&#128203; Copier l\'adresse</button>';
+    }
     var carBtn="";
     if(typeof CAR_EVENTS!=="undefined" && CAR_EVENTS[ev.title]){
       carBtn='<span class="car-btn">&#128663; Voiture</span>';
@@ -3305,7 +3312,7 @@ function openDay(id){
     }
     evh+='<div class="tr '+tclass(ev.type)+'" id="ev-'+curDay.id+'-'+i+'">';
     evh+='<div class="tll"><div class="tld"></div>'+(last?"":'<div class="tlln"></div>')+'</div>';
-    evh+='<div class="tc">'+cost+'<div class="tt">'+e(ev.time)+'</div><div class="tti">'+e(ev.title)+'</div><div class="tb2">'+e(ev.body)+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+mapsHtml+planeBtn+walkBtn+trainBtn+boatBtn+uberBtn+grabBtn+carBtn+navBtn+infoBtn+calBtn+'</div></div></div>';
+    evh+='<div class="tc">'+cost+'<div class="tt">'+e(ev.time)+'</div><div class="tti">'+e(ev.title)+'</div><div class="tb2">'+e(ev.body)+'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'+mapsHtml+planeBtn+walkBtn+trainBtn+boatBtn+uberBtn+grabBtn+copyBtn+carBtn+navBtn+infoBtn+calBtn+'</div></div></div>';
   });
   var tip=curDay.tip?'<div class="tipb"><div class="tipl">BON A SAVOIR</div><div class="tipt">'+e(curDay.tip)+'</div></div>':"";
   var note=curDay.note?'<div class="noteb"><div class="notel">DEMAIN</div><div class="notet">'+e(curDay.note)+'</div></div>':"";
@@ -4456,6 +4463,77 @@ var GRAB_EVENTS = {
   "Clarke Quay - Bars et Street Food": "grab://open",
   "Croisiere Singapore River - 40 min": "grab://open",
 };
+
+// Adresse de destination a copier pour coller dans Grab / Uber (une par event VTC)
+var GRABDEST_EVENTS = {
+  "Grab vers Pan Pacific Orchard": "Pan Pacific Orchard, 10 Claymore Rd, Singapore 229540",
+  "Merlion Park + Esplanade": "Merlion Park, 1 Fullerton Rd, Singapore 049213",
+  "Sri Veeramakaliamman Temple - Little India": "Sri Veeramakaliamman Temple, 141 Serangoon Rd, Singapore 218042",
+  "Buddha Tooth Relic Temple - Chinatown": "Buddha Tooth Relic Temple, 288 South Bridge Rd, Singapore 058840",
+  "Tanjong Beach Club - Session Daybed 3h30": "Tanjong Beach Club, 120 Tanjong Beach Walk, Sentosa, Singapore 098942",
+  "Croisiere Singapore River - 40 min": "WaterB River Cruise, 6 Bayfront Ave, Singapore 018974",
+  "Spectra - Spectacle MBS GRATUIT": "Marina Bay Sands Event Plaza, 10 Bayfront Ave, Singapore 018956",
+  "Clarke Quay - Bars et Street Food": "Clarke Quay, 3 River Valley Rd, Singapore 179024",
+  "Dejeuner - Maxwell Food Centre": "Maxwell Food Centre, 1 Kadayanallur St, Singapore 069184",
+  "Reveil + Check-out Mondrian": "Changi Airport Terminal 1, Airport Blvd, Singapore 819642",
+
+  // JAPON (Uber / taxi) - nom romaji + adresse pour le chauffeur
+  "Promenade Dotonbori - Premier apercu": "Dotonbori, Chuo-ku, Osaka 542-0071",
+  "Sky Bath Rooftop Candeo Hotel": "Candeo Hotels Osaka The Tower, 1-1-27 Dojimahama, Kita-ku, Osaka 530-0004",
+  "Chateau d Osaka - Osaka-jo": "Osaka Castle (Osaka-jo), 1-1 Osakajo, Chuo-ku, Osaka 540-0002",
+  "Dejeuner Wagyu Sukiyaki GYUMON - Osaka": "Wagyu Sukiyaki GYUMON, 2-8-20 Higashishinsaibashi, Chuo-ku, Osaka 542-0083",
+  "Shinkansen Shin-Osaka vers Hiroshima": "Shin-Osaka Station, 5-16-1 Nishinakajima, Yodogawa-ku, Osaka 532-0011",
+  "Dome de la Bombe Atomique - UNESCO": "Atomic Bomb Dome (Genbaku Dome), 1-10 Otemachi, Naka-ku, Hiroshima 730-0051",
+  "Ferry JR vers Ile de Miyajima": "Miyajimaguchi Ferry Terminal, Miyajimaguchi, Hatsukaichi, Hiroshima 739-0411",
+  "Check-out Candeo + Consigne bagages": "Candeo Hotels Osaka The Tower, 1-1-27 Dojimahama, Kita-ku, Osaka 530-0004",
+  "Parc de Nara - Cerfs en liberte !": "Nara Park, Zoshicho, Nara 630-8211",
+  "JR Osaka vers Kyoto + Taxi vers AirBNB": "25-4 Higashikujo Kitamatsunokicho, Minami-ku, Kyoto 601-8022",
+  "Bambouseraie de Sagano - Arashiyama": "Arashiyama Bamboo Grove, Sagatenryuji, Ukyo-ku, Kyoto 616-8385",
+  "Dejeuner Arashiyama": "Arashiyama, Ukyo-ku, Kyoto 616-8385",
+  "Kiyomizudera - Temple de nuit": "Kiyomizu-dera, 1-294 Kiyomizu, Higashiyama-ku, Kyoto 605-0862",
+  "Kinkaku-ji - Le Pavillon d or": "Kinkaku-ji, 1 Kinkakujicho, Kita-ku, Kyoto 603-8361",
+  "Nijo-jo - Chateau du Shogun": "Nijo Castle (Nijo-jo), 541 Nijojocho, Nakagyo-ku, Kyoto 604-8301",
+  "Dejeuner - Nishiki Market": "Nishiki Market, Nishikikoji-dori, Nakagyo-ku, Kyoto 604-8055",
+  "Chemin des Philosophes - 2 km": "Philosopher's Path (Tetsugaku-no-michi), Sakyo-ku, Kyoto 606-8406",
+  "Taxi maison vers Gare de Kyoto": "Kyoto Station, Higashishiokojicho, Shimogyo-ku, Kyoto 600-8216",
+  "Vue gratuite - Tokyo Metropolitan Gov. Building": "Tokyo Metropolitan Government Building, 2-8-1 Nishishinjuku, Shinjuku-ku, Tokyo 163-8001",
+  "Senso-ji - Temple fonde en 645": "Senso-ji, 2-3-1 Asakusa, Taito-ku, Tokyo 111-0032",
+  "Meiji Shrine - Foret en plein Tokyo": "Meiji Jingu, 1-1 Yoyogikamizonocho, Shibuya-ku, Tokyo 151-8557",
+  "Shibuya Crossing - Carrefour du monde": "Shibuya Scramble Crossing, 2 Dogenzaka, Shibuya-ku, Tokyo 150-0043",
+  "Arcades SEGA et Taito - Akihabara": "Akihabara Station, 1-17-6 Sotokanda, Chiyoda-ku, Tokyo 101-0021",
+  "Unicorn Gundam 19.7m + DiverCity - Odaiba": "DiverCity Tokyo Plaza, 1-1-10 Aomi, Koto-ku, Tokyo 135-0064",
+  "teamLab Planets - A NE PAS RATER !": "teamLab Planets TOKYO, 6-1-16 Toyosu, Koto-ku, Tokyo 135-0061",
+  "Coucher de soleil - Odaiba Marine Park": "Odaiba Marine Park, 1-4 Daiba, Minato-ku, Tokyo 135-0091",
+  "Shinjuku vers Haneda T3 Keikyu": "Haneda Airport Terminal 3, 2-6-5 Hanedakuko, Ota-ku, Tokyo 144-0041",
+  "Check-in Appartement Shinjuku": "1-32-15 Shinjuku, Shinjuku-ku, Tokyo 160-0022",
+  "Diner-spectacle Sumo": "Animate Kyoto, 525-1 Higashigawacho, Nakagyo-ku, Kyoto",
+};
+
+function copyDest(btn){
+  var addr=btn.getAttribute("data-addr")||"";
+  var done=function(){
+    var old=btn.innerHTML;
+    btn.classList.add("copied");
+    btn.innerHTML="&#10003; Adresse copiee";
+    setTimeout(function(){ btn.classList.remove("copied"); btn.innerHTML=old; },1600);
+  };
+  var fallback=function(){
+    try{
+      var t=document.createElement("textarea");
+      t.value=addr; t.setAttribute("readonly","");
+      t.style.position="fixed"; t.style.top="-9999px";
+      document.body.appendChild(t); t.select();
+      document.execCommand("copy"); document.body.removeChild(t); done();
+    }catch(e){
+      window.prompt("Copiez l'adresse :", addr);
+    }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(addr).then(done).catch(fallback);
+  }else{
+    fallback();
+  }
+}
 
 var CAL_MAP = {
   "PREPARATION DEPART - COUCHER AVANT 20H30": "scoot_wakeup",
