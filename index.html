@@ -472,7 +472,7 @@ details.acc[open] .acc-chevron{transform:rotate(180deg)}
   </div>
 
   <div id="countdown" style="margin-top:14px;text-align:center">
-  <div style="font-size:11px;font-weight:700;letter-spacing:3px;color:#AAA;margin-bottom:6px">AVANT LE DÉPART</div>
+  <div id="cd-label" style="font-size:11px;font-weight:700;letter-spacing:3px;color:#AAA;margin-bottom:6px">AVANT LE DÉPART</div>
   <div style="display:flex;gap:10px;justify-content:center">
     <div style="background:#272727;border-radius:10px;padding:10px 14px;min-width:56px;text-align:center">
       <div id="cd-days" style="font-size:26px;font-weight:800;color:#C9A84C;line-height:1">--</div>
@@ -2840,14 +2840,37 @@ var CITY_INFO = {
 var curDay=null;
 
 function updateCountdown(){
-  var depart = new Date(2026, 7, 13, 8, 30, 0); // 13 août 2026 08h30 (depart chez Thomas)
+  var depart = new Date(2026, 7, 13, 8, 30, 0); // 13 août 2026 08h30 (depart chez Thomas, heure France)
+  // Retour : decollage HND le 29/08 a 16h35 heure de Tokyo (JST = UTC+9) => 07h35 UTC.
+  // Cible fixee en instant absolu : le compte a rebours est correct quel que soit
+  // le fuseau ou se trouve le voyageur (France, Singapour ou Japon).
+  var retour = new Date(Date.UTC(2026, 7, 29, 7, 35, 0));
   var now = new Date();
+
+  var label = document.getElementById("cd-label");
+  var el = document.getElementById("countdown");
+
+  // Phase 1 : avant le depart
   var diff = depart - now;
-  if(diff <= 0){
-    var el = document.getElementById("countdown");
-    if(el) el.innerHTML = '<div style="font-size:13px;font-weight:700;color:#C9A84C;letter-spacing:2px">BON VOYAGE ! ✈</div>';
+  if(diff > 0){
+    if(label) label.textContent = "AVANT LE DÉPART";
+    renderCountdown(diff);
     return;
   }
+
+  // Phase 2 : voyage commence -> compte a rebours avant le retour
+  var diffR = retour - now;
+  if(diffR > 0){
+    if(label) label.textContent = "AVANT LE RETOUR";
+    renderCountdown(diffR);
+    return;
+  }
+
+  // Phase 3 : retour passe
+  if(el) el.innerHTML = '<div style="font-size:13px;font-weight:700;color:#C9A84C;letter-spacing:2px">BON RETOUR ! ✈</div>';
+}
+
+function renderCountdown(diff){
   var days  = Math.floor(diff / 86400000);
   var hours = Math.floor((diff % 86400000) / 3600000);
   var mins  = Math.floor((diff % 3600000) / 60000);
