@@ -3300,7 +3300,7 @@ function openDay(id){
     var copyBtn="";
     if(typeof GRABDEST_EVENTS!=="undefined" && GRABDEST_EVENTS[ev.title]){
       var addr=GRABDEST_EVENTS[ev.title];
-      copyBtn='<button class="copy-btn" onclick="copyDest(this)" data-addr="'+addr.replace(/"/g,"&quot;").replace(/'/g,"&#39;")+'">&#128203; Copier l\'adresse</button>';
+      copyBtn='<button class="copy-btn" onclick="copyDest(this)" data-addr="'+addr.replace(/"/g,"&quot;").replace(/'/g,"&#39;")+'">&#128203; Copier</button>';
     }
     var carBtn="";
     if(typeof CAR_EVENTS!=="undefined" && CAR_EVENTS[ev.title]){
@@ -4514,7 +4514,7 @@ function copyDest(btn){
   var done=function(){
     var old=btn.innerHTML;
     btn.classList.add("copied");
-    btn.innerHTML="&#10003; Adresse copiee";
+    btn.innerHTML="&#10003; Copie";
     setTimeout(function(){ btn.classList.remove("copied"); btn.innerHTML=old; },1600);
   };
   var fallback=function(){
